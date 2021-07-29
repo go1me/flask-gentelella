@@ -2586,6 +2586,84 @@ if (typeof NProgress != 'undefined') {
 				  });
 				});
 
+
+				var $datatable_target = $('#datatable-target');
+
+				$datatable_target.dataTable({
+					dom: "Blfrtip",
+					buttons: [
+					  {
+						extend: "copy",
+						className: "btn-sm"
+					  },
+					  {
+						extend: "csv",
+						className: "btn-sm"
+					  },
+					  {
+						extend: "excel",
+						className: "btn-sm"
+					  },
+					  {
+						extend: "pdfHtml5",
+						className: "btn-sm"
+					  },
+					  {
+						extend: "print",
+						className: "btn-sm"
+					  },
+					],
+					responsive: true,
+				  'order': [[ 1, 'asc' ]],
+				  'columnDefs': [
+					{ orderable: false, targets: [0] }
+				  ]
+				});
+				$datatable_target.on('draw.dt', function() {
+				  $('checkbox input').iCheck({
+					checkboxClass: 'icheckbox_flat-green'
+				  });
+				});
+
+
+				var $datatable_script = $('#datatable-script');
+
+				$datatable_script.dataTable({
+					dom: "Blfrtip",
+					buttons: [
+					  {
+						extend: "copy",
+						className: "btn-sm"
+					  },
+					  {
+						extend: "csv",
+						className: "btn-sm"
+					  },
+					  {
+						extend: "excel",
+						className: "btn-sm"
+					  },
+					  {
+						extend: "pdfHtml5",
+						className: "btn-sm"
+					  },
+					  {
+						extend: "print",
+						className: "btn-sm"
+					  },
+					],
+					responsive: true,
+				  'order': [[ 1, 'asc' ]],
+				  'columnDefs': [
+					{ orderable: false, targets: [0] }
+				  ]
+				});
+				$datatable_script.on('draw.dt', function() {
+				  $('checkbox input').iCheck({
+					checkboxClass: 'icheckbox_flat-green'
+				  });
+				});
+
 				TableManageButtons.init();
 				
 			};
