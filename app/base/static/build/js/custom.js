@@ -2613,12 +2613,34 @@ if (typeof NProgress != 'undefined') {
 						className: "btn-sm"
 					  },
 					],
+					"ajax": {
+						// "url": "static/objects2.txt", // This works for a static file
+						"url": "/tables/get_targets", // This now also works
+						"dataType": "json",
+						"dataSrc": "data",
+						"contentType":"application/json"
+					},
+					"columns": [
+						{"data":"",title:'<input type="checkbox" id="checkALL">'},
+						{"data":"ip", title:"ip"},
+						{"data":"status",title:"在线"},
+						{"data":"flag_number",title:"flag数"},
+						{"data":"update_time",title:"更新时间"}
+					],
 					responsive: true,
 				  'order': [[ 1, 'asc' ]],
 				  'columnDefs': [
-					{ orderable: false, targets: [0] }
+					{
+						targets:0,
+						orderable: false, 
+						render:function(data,type,row,meta){
+							return '<input class="checkbox_select" type="checkbox" id="select-all" value="'+$('<div/>').text(row.id).html()+'">';
+						}
+					}
 				  ]
 				});
+
+				
 				$datatable_target.on('draw.dt', function() {
 				  $('checkbox input').iCheck({
 					checkboxClass: 'icheckbox_flat-green'
