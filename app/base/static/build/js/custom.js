@@ -2621,7 +2621,7 @@ if (typeof NProgress != 'undefined') {
 						"contentType":"application/json"
 					},
 					"columns": [
-						{"data":"",title:'<input type="checkbox" id="checkALL">'},
+						{"data":null},
 						{"data":"ip", title:"ip"},
 						{"data":"status",title:"在线"},
 						{"data":"flag_number",title:"flag数"},
@@ -2631,21 +2631,37 @@ if (typeof NProgress != 'undefined') {
 				  'order': [[ 1, 'asc' ]],
 				  'columnDefs': [
 					{
-						targets:0,
-						orderable: false, 
-						render:function(data,type,row,meta){
-							return '<input class="checkbox_select" type="checkbox" id="select-all" value="'+$('<div/>').text(row.id).html()+'">';
+						'targets': 0,
+						'checkboxes': {
+							'selectRow': true
 						}
 					}
-				  ]
+				  ],
+				  'select': {
+					'style': 'multi'
+				 },
+				});
+
+				// Handle form submission event
+				$('#frm-example').on('submit', function(e){
+					var form = this;
+
+					var rows_selected = table.column(0).checkboxes.selected();
+
+					// Iterate over all selected checkboxes
+					$.each(rows_selected, function(index, rowId){
+					// Create a hidden element
+					$(form).append(
+						$('<input>')
+							.attr('type', 'hidden')
+							.attr('name', 'id[]')
+							.val(rowId)
+					);
+					});
 				});
 
 				
-				$datatable_target.on('draw.dt', function() {
-				  $('checkbox input').iCheck({
-					checkboxClass: 'icheckbox_flat-green'
-				  });
-				});
+				
 
 
 				var $datatable_script = $('#datatable-script');
