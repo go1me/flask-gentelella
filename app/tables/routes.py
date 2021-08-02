@@ -17,12 +17,32 @@ def get_targets():
         "data": []
     }
 
-    for i in range(1,100):
+    for i in range(1,6):
         data["data"].append(
             {
+                "target_id":i,
                 "ip": "192.168.0."+str(i),
                 "status": "在线",
-                "flag_number": 12,
+                "flag_number": i,
+                "update_time": "2022/04/25",
+            },
+        )
+    return jsonify(data)
+
+@blueprint.route('/get_scripts', methods=['GET'])
+@login_required
+def get_scripts():
+    # Assume data comes from somewhere else
+    data = {
+        "data": []
+    }
+
+    for i in range(1,6):
+        data["data"].append(
+            {
+                "script_id":i+100,
+                "script_name": "t"+str(i)+".py",
+                "used_number": i,
                 "update_time": "2022/04/25",
             },
         )

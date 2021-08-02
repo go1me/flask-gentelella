@@ -2618,7 +2618,7 @@ if (typeof NProgress != 'undefined') {
 						"contentType":"application/json"
 					},
 					"columns": [
-						{"data":null},
+						{"data":"target_id",title:"target_id"},
 						{"data":"ip", title:"ip"},
 						{"data":"status",title:"在线"},
 						{"data":"flag_number",title:"flag数"},
@@ -2641,9 +2641,7 @@ if (typeof NProgress != 'undefined') {
 
 				
 			
-				var $datatable_script = $('#datatable-script');
-
-				$datatable_script.DataTable({
+				var datatable_script = $('#datatable-script').DataTable({
 					dom: "Blfrtip",
 					buttons: [
 					  {
@@ -2667,6 +2665,19 @@ if (typeof NProgress != 'undefined') {
 						className: "btn-sm"
 					  },
 					],
+					"ajax": {
+						// "url": "static/objects2.txt", // This works for a static file
+						"url": "/tables/get_scripts", // This now also works
+						"dataType": "json",
+						"dataSrc": "data",
+						"contentType":"application/json"
+					},
+					"columns": [
+						{"data":"script_id",title:"script_id"},
+						{"data":"script_name", title:"脚本名称"},
+						{"data":"used_number",title:"使用数"},
+						{"data":"update_time",title:"更新时间"}
+					],
 					responsive: true,
 				  'order': [[ 1, 'asc' ]],
 				  'columnDefs': [
@@ -2687,16 +2698,24 @@ if (typeof NProgress != 'undefined') {
 					var form = this;
 
 					var rows_selected = datatable_target.column(0).checkboxes.selected();
+					var cript_selected = datatable_script.column(0).checkboxes.selected();
+					$.each(cript_selected, function(index, rowId){
+						console.log(index);
+						console.log(rowId);
+						console.log("cript_selected");
+					});
 
 					// Iterate over all selected checkboxes
 					$.each(rows_selected, function(index, rowId){
-					// Create a hidden element
-					$(form).append(
-						$('<input>')
-							.attr('type', 'hidden')
-							.attr('name', 'id[]')
-							.val(rowId)
-					);
+						console.log(index);
+						console.log(rowId);
+						// Create a hidden element
+						$(form).append(
+							$('<input>')
+								.attr('type', 'hidden')
+								.attr('name', 'id[]')
+								.val(rowId)
+						);
 					});
 				});
 				
