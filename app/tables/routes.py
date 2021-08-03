@@ -1,7 +1,7 @@
 from app.tables import blueprint
-from flask import render_template,jsonify
+from flask import render_template,jsonify,request
 from flask_login import login_required
-
+import json
 
 @blueprint.route('/<template>')
 @login_required
@@ -47,3 +47,11 @@ def get_scripts():
             },
         )
     return jsonify(data)
+
+
+@blueprint.route('/post_select_items', methods=['POST'])
+@login_required
+def post_select_items():
+    data = json.loads(request.get_data())
+    print(data,type(data))
+    return data

@@ -2693,30 +2693,41 @@ if (typeof NProgress != 'undefined') {
 				 },
 				});
 
-				// Handle form submission event
+				//提交选择的目标和脚本到后台
 				$('#frm-example').on('submit', function(e){
 					var form = this;
 
-					var rows_selected = datatable_target.column(0).checkboxes.selected();
-					var cript_selected = datatable_script.column(0).checkboxes.selected();
-					$.each(cript_selected, function(index, rowId){
-						console.log(index);
-						console.log(rowId);
-						console.log("cript_selected");
+					var target_selected = datatable_target.column(0).checkboxes.selected();
+					var script_selected = datatable_script.column(0).checkboxes.selected();
+
+					var script_selected_list = [];
+					$.each(script_selected, function(index, rowId){
+						script_selected_list.push(rowId)
 					});
 
-					// Iterate over all selected checkboxes
-					$.each(rows_selected, function(index, rowId){
-						console.log(index);
-						console.log(rowId);
-						// Create a hidden element
-						$(form).append(
-							$('<input>')
-								.attr('type', 'hidden')
-								.attr('name', 'id[]')
-								.val(rowId)
-						);
+					var target_selected_list = [];
+					$.each(target_selected, function(index, rowId){
+						target_selected_list.push(rowId)
+		
 					});
+
+					selected_data={"targets":target_selected_list,"script":script_selected_list}
+
+					$.ajax({   
+						contentType: 'application/json',
+						type: 'POST',
+						url: "/tables/post_select_items",
+						dataType: "json",
+					   	data: JSON.stringify(selected_data),
+						success: function (message) {
+							console.log(message);
+							},
+						error: function (message) {
+							console.log(message);
+							alert("提交数据失败！888"+message);
+								 
+							}
+					}); 
 				});
 				
 
