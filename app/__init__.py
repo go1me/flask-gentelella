@@ -25,8 +25,9 @@ def configure_database(app):
 
     @app.before_first_request
     def initialize_database():
+        print("1111111111111111111111111111111111111111111111test2.1")
         db.create_all()
-        print("1111111111111111111111111111111111111111111111test2")
+        print("1111111111111111111111111111111111111111111111test2.2")
 
     @app.teardown_request
     def shutdown_session(exception=None):

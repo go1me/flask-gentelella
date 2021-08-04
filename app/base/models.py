@@ -32,10 +32,8 @@ class User(db.Model, UserMixin):
 '''
 #初始化用户，用于测试，后续要删除
 @event.listens_for(User.__table__, 'after_create')
-def create_User(*args, **kwargs):
-    user = User(username="a",email="a",password="a")
-    db.session.add(user)
-    db.session.commit()
+def create_User(target, connection, **kw):
+    connection.execute(target.insert(), {'username': "a","email":"a","password":"a"})
 '''
 
 

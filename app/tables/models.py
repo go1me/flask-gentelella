@@ -19,15 +19,15 @@ class Target(db.Model):
 
 #初始化数据
 @event.listens_for(Target.__table__, 'after_create')
-def create_Target(*args, **kwargs):
+def create_Target(target, connection, **kw):
     print("1111111111111111111111111111111111111111111111test4")
-    try:
-        for i in range(5):
-            ip="192.168.12."+str(i)
-            target = Target(ip=ip)
-            db.session.add(target)
-        db.session.commit()
-    except:
-        print("1111111111111111111111111111111111111111111111test5")
+    '''
+    for i in range(5):
+        ip="192.168.12."+str(i)
+        db.session.add(Target(ip=ip))
+    db.session.commit()
+    '''
+    connection.execute(target.insert(), {'ip': "192.168.1.1"}, {'ip': "192.168.1.2"}, {'ip': "192.168.1.3"})
+    print("1111111111111111111111111111111111111111111111test5")
 
 
