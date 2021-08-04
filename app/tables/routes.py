@@ -19,16 +19,7 @@ def get_targets():
         "data": []
     }
 
-    #构造数据
-    for i in range(5):
-        ip="192.168.12."+str(i)
-        target = Target(ip=ip)
-        db.session.add(target)
-        print("test",i)
-    db.session.commit()
-
     target_list = db.session.query(Target).all()
-    print("test",target_list)
     for target in target_list:
         data["data"].append(
             {

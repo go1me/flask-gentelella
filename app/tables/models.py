@@ -1,6 +1,6 @@
 import datetime
 #from uuid import uuid4
-from sqlalchemy import DateTime, Column, Integer, String
+from sqlalchemy import DateTime, Column, Integer, String, event
 from app import db
 
 class Target(db.Model):
@@ -16,5 +16,18 @@ class Target(db.Model):
 
     def __repr__(self):
         return str(self.ip)
+
+#初始化数据
+@event.listens_for(Target.__table__, 'after_create')
+def create_Target(*args, **kwargs):
+    print("1111111111111111111111111111111111111111111111test4")
+    try:
+        for i in range(5):
+            ip="192.168.12."+str(i)
+            target = Target(ip=ip)
+            db.session.add(target)
+        db.session.commit()
+    except:
+        print("1111111111111111111111111111111111111111111111test5")
 
 

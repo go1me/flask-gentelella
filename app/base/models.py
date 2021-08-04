@@ -1,6 +1,6 @@
 from bcrypt import gensalt, hashpw
 from flask_login import UserMixin
-from sqlalchemy import LargeBinary, Column, Integer, String
+from sqlalchemy import LargeBinary, Column, Integer, String,event
 
 from app import db, login_manager
 
@@ -28,6 +28,15 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return str(self.username)
+
+'''
+#初始化用户，用于测试，后续要删除
+@event.listens_for(User.__table__, 'after_create')
+def create_User(*args, **kwargs):
+    user = User(username="a",email="a",password="a")
+    db.session.add(user)
+    db.session.commit()
+'''
 
 
 @login_manager.user_loader
