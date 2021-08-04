@@ -2622,7 +2622,7 @@ if (typeof NProgress != 'undefined') {
 						{"data":"ip", title:"ip"},
 						{"data":"status",title:"在线"},
 						{"data":"flag_number",title:"flag数"},
-						{"data":"update_time",title:"更新时间"}
+						{"data":"create_time",title:"创建时间"}
 					],
 					responsive: true,
 				  'order': [[ 1, 'asc' ]],
