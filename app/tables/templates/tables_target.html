@@ -36,7 +36,7 @@
       <div class="row">
         <form name="frm-example" id="frm-example">
 
-          <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
               <div class="x_title">
                 <h2>目标列表</small></h2>
@@ -67,7 +67,7 @@
             </div>
           </div>
 
-          <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
               <div class="x_title">
                 <h2>脚本列表</small></h2>
@@ -118,6 +118,27 @@
       </div>
     </div>
   </div>
+
+  <!-- 添加模态框  新建target-->
+  <div id="add_target_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">添加目标</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="add_ip" placeholder="ip">
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="add_new_target()">确定</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
   
 {% endblock content %}
 

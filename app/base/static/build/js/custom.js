@@ -2587,28 +2587,41 @@ if (typeof NProgress != 'undefined') {
 				});
 
 				var datatable_target = $('#datatable-target').DataTable({
-					dom: "Blfrtip",
+					//dom: "Blfrtip",
+					//https://blog.csdn.net/u010663021/article/details/114665976 参考
+					dom: "<'row'<'col-md-3'B><'col-md-6'f>r<'col-md-2 text-right'l>>t<'row'<'col-md-6'i><'col-md-6 text-right'p>>",
 					buttons: [
-					  {
-						extend: "copy",
-						className: "btn-sm"
-					  },
-					  {
-						extend: "csv",
-						className: "btn-sm"
-					  },
-					  {
-						extend: "excel",
-						className: "btn-sm"
-					  },
-					  {
-						extend: "pdfHtml5",
-						className: "btn-sm"
-					  },
-					  {
-						extend: "print",
-						className: "btn-sm"
-					  },
+						{
+							text: 'New',
+							className: "btn-sm",
+							text: '新建',
+							action: function ( e, dt, node, config ) {
+								$("#add_target_modal").modal()
+								//https://blog.csdn.net/wsjzzcbq/article/details/107867480
+							}
+						},
+						{
+							extend: "copy",
+							text: '拷贝',
+							className: "btn-sm"
+						},
+						{
+							extend: "csv",
+							text: '导出csv',
+							className: "btn-sm"
+						},
+						{
+							extend: "excelHtml5",
+							className: "btn-sm"
+						},
+						{
+							text: 'Reload',
+							text: '刷新',
+							className: "btn-sm",
+							action: function ( e, dt, node, config ) {
+								dt.ajax.reload();
+							}
+						}
 					],
 					"ajax": {
 						// "url": "static/objects2.txt", // This works for a static file
@@ -2642,7 +2655,8 @@ if (typeof NProgress != 'undefined') {
 				
 			
 				var datatable_script = $('#datatable-script').DataTable({
-					dom: "Blfrtip",
+					//dom: "Blfrtip",
+					dom: "<'row'<'#btn_add.col-md-1'><'col-md-3'B><'col-md-6'f>r<'col-md-2 text-right'l>>t<'row'<'col-md-6'i><'col-md-6 text-right'p>>",
 					buttons: [
 					  {
 						extend: "copy",
@@ -2653,15 +2667,7 @@ if (typeof NProgress != 'undefined') {
 						className: "btn-sm"
 					  },
 					  {
-						extend: "excel",
-						className: "btn-sm"
-					  },
-					  {
-						extend: "pdfHtml5",
-						className: "btn-sm"
-					  },
-					  {
-						extend: "print",
+						extend: "excelHtml5",
 						className: "btn-sm"
 					  },
 					],
