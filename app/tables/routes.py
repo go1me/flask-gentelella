@@ -27,6 +27,17 @@ def get_scripts():
     }
     return jsonify(data)
 
+@blueprint.route('/add_target', methods=['POST'])
+@login_required
+def add_target():
+    data = json.loads(request.get_data())
+    print(data,type(data))
+    ip = data["ip"]
+    target = Target(ip=ip)
+    db.session.add(target)
+    db.session.commit()
+    return jsonify('success')
+
 
 @blueprint.route('/post_select_items', methods=['POST'])
 @login_required

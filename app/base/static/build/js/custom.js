@@ -2699,6 +2699,30 @@ if (typeof NProgress != 'undefined') {
 				 },
 				});
 
+				function add_new_target() {
+					$.ajax({
+						type:"post",
+						url:"/tables/add_target",
+						dataType: "json",
+						contentType:"application/json",
+						async:true,
+						data:{
+							ip: $("#add_ip_text_in_add_target_modal").val()
+						},
+						success:function(res){
+							// 刷新表格数据，分页信息不会重置
+							datatable_target.ajax.reload(null,false);
+							//清空添加表单数据
+							clear_add_target_modal();
+							alert(res)
+						}
+					});
+				}
+			 
+				function clear_add_target_modal(){
+					$("#add_ip_text_in_add_target_modal").val('')
+				}
+
 				//提交选择的目标和脚本到后台
 				$('#frm-example').on('submit', function(e){
 					var form = this;
