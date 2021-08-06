@@ -31,12 +31,44 @@ def get_scripts():
 @login_required
 def add_target():
     data = json.loads(request.get_data())
-    print(data,type(data))
     ip = data["ip"]
-    target = Target(ip=ip)
+    group = data["group"]
+    target = Target(ip=ip,group=group)
     db.session.add(target)
     db.session.commit()
     return jsonify('success')
+
+
+@blueprint.route('/update_target', methods=['POST'])
+@login_required
+def update_target():
+    data = json.loads(request.get_data())
+    ip = data["ip"]
+    group = data["group"]
+    # 更新多条
+    res = db.session.query(Target).filter(Target.ip == ip).update({"ip":ip,"group":group})
+    print(res) # 6 res就是我们当前这句更新语句所更新的行数
+
+    db.session.commit()
+    return jsonify('success')
+
+@blueprint.route('/delete_target', methods=['POST'])
+@login_required
+def delete_target():
+    data = json.loads(request.get_data())
+    id = data["id"]
+    db.session.query(Target).filter(Target.id == id).delete()
+    db.session.commit()
+    return jsonify('success')
+
+@blueprint.route('/get_target_by_id', methods=['POST'])
+@login_required
+def get_target_by_id():
+    data = json.loads(request.get_data())
+    id = data["id"]
+    target = db.session.query(Target).filter(Target.id == id).first().to_json()
+    print(id,target)
+    return jsonify(target)
 
 
 @blueprint.route('/post_select_items', methods=['POST'])

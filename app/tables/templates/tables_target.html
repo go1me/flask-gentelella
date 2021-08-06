@@ -12,7 +12,6 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<script src="{{ url_for('static', filename='build/js/tables_target.js') }}"></script>
   <div class="right_col" role="main">
     <div class="">
       <div class="page-title">
@@ -130,9 +129,13 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="add_ip_text_in_add_target_modal" placeholder="ip">
+                    <input type="text" class="form-control" id="add_ip_text_in_add_target_modal" required="required" placeholder="ip*">
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="add_group_text_in_add_target_modal" placeholder="分组">
                 </div>
                 <p>输入格式192.168.0.1或者192.168.0.1/24</p>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="add_new_target()">确定</button>
@@ -140,6 +143,32 @@
         </div>
     </div>
   </div>
+
+  <!-- 修改模态框 修改target-->
+<div id="update_target_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">修改目标</h4>
+          </div>
+          <div class="modal-body">
+              <div class="form-group">
+                  <input type="text" class="form-control" id="edit_ip_text_in_update_target_modal" placeholder="ip">
+              </div>
+
+              <div class="form-group">
+                  <input type="text" class="form-control" id="edit_group_text_in_update_target_modal" placeholder="分组">
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="update_target()">确定</button>
+          </div>
+      </div>
+  </div>
+</div>
+
 
   
 {% endblock content %}
@@ -162,4 +191,5 @@
   <script src="{{ url_for('static', filename='vendors/jszip/dist/jszip.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+  <script src="{{ url_for('static', filename='build/js/tables_target.js') }}"></script>
 {% endblock javascripts %}
