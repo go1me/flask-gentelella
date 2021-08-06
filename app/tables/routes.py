@@ -19,14 +19,6 @@ def get_targets():
     } 
     return jsonify(data)
 
-@blueprint.route('/get_scripts', methods=['GET'])
-@login_required
-def get_scripts():
-    data = {
-        "data": [i.to_json() for i in db.session.query(Script).all()]
-    }
-    return jsonify(data)
-
 @blueprint.route('/add_target', methods=['POST'])
 @login_required
 def add_target():
@@ -77,3 +69,25 @@ def post_select_items():
     data = json.loads(request.get_data())
     print(data,type(data))
     return data
+
+
+
+
+
+@blueprint.route('/get_scripts', methods=['GET'])
+@login_required
+def get_scripts():
+    data = {
+        "data": [i.to_json() for i in db.session.query(Script).all()]
+    }
+    return jsonify(data)
+
+
+@blueprint.route('/delete_script', methods=['POST'])
+@login_required
+def delete_script():
+    data = json.loads(request.get_data())
+    id = data["id"]
+    db.session.query(Script).filter(Script.id == id).delete()
+    db.session.commit()
+    return jsonify('success')

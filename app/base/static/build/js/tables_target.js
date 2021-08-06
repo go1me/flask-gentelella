@@ -82,8 +82,6 @@ function clear_add_target_modal(){
         success:function(message){
             // 刷新表格数据，分页信息不会重置
             $('#datatable-target').DataTable().ajax.reload(null,false);
-            //清空添加表单数据
-            clear_add_target_modal();
             console.log(message);
         },
         error: function (message) {
@@ -125,6 +123,34 @@ function edit_target(id) {
 }
 
 
+/**
+ * 删除script
+ */
+ function delete_script(id) {
+    send_data={
+        "id":id
+    }
+    $.ajax({
+        type:"post",
+        url:"/tables/delete_script",
+        dataType: "json",
+        contentType:"application/json",
+        async:true,
+        data:JSON.stringify(send_data),
+        success:function(message){
+            // 刷新表格数据，分页信息不会重置
+            $('#datatable-script').DataTable().ajax.reload(null,false);
+            console.log(message);
+        },
+        error: function (message) {
+            console.log(message);
+            alert("删除数据失败！888"+id+message);
+                 
+            }
+    });
+}
+
+
 function init_tables_target_DataTable() {
     var datatable_target = $('#datatable-target').DataTable({
         //dom: "Blfrtip",
@@ -132,7 +158,6 @@ function init_tables_target_DataTable() {
         dom: "<'row'<'col-md-3'B><'col-md-6'f>r<'col-md-2 text-right'l>>t<'row'<'col-md-6'i><'col-md-6 text-right'p>>",
         buttons: [
             {
-                text: 'New',
                 className: "btn-sm",
                 text: '新建',
                 action: function ( e, dt, node, config ) {
@@ -216,18 +241,35 @@ function init_tables_target_DataTable() {
         //dom: "Blfrtip",
         dom: "<'row'<'col-md-3'B><'col-md-6'f>r<'col-md-2 text-right'l>>t<'row'<'col-md-6'i><'col-md-6 text-right'p>>",
         buttons: [
-          {
-            extend: "copy",
-            className: "btn-sm"
-          },
-          {
-            extend: "csv",
-            className: "btn-sm"
-          },
-          {
-            extend: "excelHtml5",
-            className: "btn-sm"
-          },
+            {
+                className: "btn-sm",
+                text: '导入python',
+                action: function ( e, dt, node, config ) {
+                    $("#upload_script_modal").modal()
+                }
+            },
+            {
+                extend: "copy",
+                text: '拷贝',
+                className: "btn-sm"
+            },
+            {
+                extend: "csv",
+                text: '导出csv',
+                className: "btn-sm"
+            },
+            {
+                extend: "excelHtml5",
+                className: "btn-sm"
+            },
+            {
+                text: 'Reload',
+                text: '刷新',
+                className: "btn-sm",
+                action: function ( e, dt, node, config ) {
+                    dt.ajax.reload();
+                }
+            }
         ],
         "ajax": {
             // "url": "static/objects2.txt", // This works for a static file
@@ -251,8 +293,7 @@ function init_tables_target_DataTable() {
                 "render" : function(data, type,row,meta) {
                     var id = '"' + row.id + '"';
                     var html = "";
-                    html += "<button onclick='edit("+ id +")'  style='margin-right:10px;'  class='down btn btn-default '>编辑</button>"
-                    html += "<a href='javascript:void(0);'   onclick='deleteData("+id+ ")'  class='down btn btn-default '> 删除</a>"
+                    html += "<a href='javascript:void(0);'   onclick='delete_script("+id+ ")'  class='down btn btn-default '> 删除</a>"
                     return html;
                 }
             }
