@@ -91,3 +91,12 @@ def delete_script():
     db.session.query(Script).filter(Script.id == id).delete()
     db.session.commit()
     return jsonify('success')
+
+
+@blueprint.route('/upload_script', methods=['POST'])
+@login_required
+def upload_script():
+    if request.method == 'POST':
+        f = request.files.get('file')  # 获取文件对象
+        print("----------------------------------------------------",f)
+    return jsonify('success')

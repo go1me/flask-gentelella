@@ -177,15 +177,17 @@
   <div class="modal-dialog" role="document">
       <div class="modal-content">
           <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="upload_script_modal_close_button"><span aria-hidden="true">&times;</span></button>
               <h4 class="modal-title">上传脚本</h4>
           </div>
           <div class="modal-body">
-            <form action="form_upload.html" class="dropzone"></form>
+            <form action="/tables/upload_script" class="dropzone" id="dropzone_upload_script_modal">
+              <div class="fallback">
+                <input name="file" type="file" />
+              </div>
+            </form>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="add_new_target()">确定</button>
           </div>
       </div>
   </div>
