@@ -4,6 +4,8 @@ from flask_login import login_required
 from app import db
 from app.tables.models import Target,Script
 import json
+import os
+import imp
 
 @blueprint.route('/<template>')
 @login_required
@@ -99,4 +101,25 @@ def upload_script():
     if request.method == 'POST':
         f = request.files.get('file')  # 获取文件对象
         print("----------------------------------------------------",f)
+        '''
+        # 创建文件夹
+        basefile = os.path.join(os.path.abspath('static'),'py')
+        if not os.path.exists(basefile):
+            os.mkdir(basefile)
+
+        # 验证后缀
+        ext = os.path.splitext(f.filename)[1]
+        if ext.split('.')[-1] not in ["py"]:
+            return 'Image only!', 400
+
+        # 生成文件名　　使用uuid模块
+        #filename = get_uuid(ext)
+        '''
+        filename="1.py"
+        
+        path = os.path.join(os.getcwd(),filename)
+        f.save(path)
+        m = imp.load_source("ttttttdd",path)
+        print(m.plugin_name)
+        print(m.run("hhhh----------------------"))
     return jsonify('success')
