@@ -61,7 +61,7 @@
               </div>
               <div class="x_content">
                 <p class="text-muted font-13 m-b-30">
-                  DataTables has most features enabled by default, so all you need to do to use it with your own tables is to call the construction function: <code>$().DataTable();</code>
+                  目标列表，表中所列为攻击目标
                 </p>
                 <table id="datatable-target" class="table table-striped table-bordered bulk_action">
                 </table>
@@ -92,7 +92,7 @@
               </div>
               <div class="x_content">
                 <p class="text-muted font-13 m-b-30">
-                  DataTables has most features enabled by default, so all you need to do to use it with your own tables is to call the construction function: <code>$().DataTable();</code>
+                  脚本列表，表中所列是攻击脚本
                 </p>
                 <table id="datatable-script" class="table table-striped table-bordered bulk_action">
                 </table>
@@ -100,20 +100,48 @@
             </div>
           </div>
 
-      
-          <p class="form-group">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </p>
-          
-          <p>
-          <b>Selected rows data:</b><br>
-          </p><pre id="example-console-rows"></pre>
-          <p></p>
-          
-          <p>
-          <b>Form data as submitted to the server:</b><br>
-          </p><pre id="example-console-form"></pre>
-          <p></p>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <br>
+            <p class="text-muted font-13 m-b-30">
+              勾选目标列表和脚本列表中的相关项，即可将脚本运用于目标，可以选择单词运行，和重复运行，重复请选择重复周期
+            </p>
+          </div>
+
+          <div class="row col-md-12 col-sm-12 col-xs-12">
+            
+            <div class="form-group">
+              <div class="col-md-2 col-sm-2 col-xs-12">
+                <div id="gender" class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                    <input type="radio" name="gender" value="signal"> &nbsp; 单次 &nbsp;
+                  </label>
+                  <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                    <input type="radio" name="gender" value="repeat"> 重复
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="middle-name" class="control-label col-md-1 col-sm-1 col-xs-12">周期</label>
+              <div class="col-md-2 col-sm-2 col-xs-12">
+                <input id="middle-name" class="form-control col-md-1 col-xs-12" type="text" name="middle-name">
+              </div>
+              <label for="middle-name" class="control-label col-md-1 col-sm-1 col-xs-12">秒</label>
+
+              <label for="middle-name" class="control-label col-md-2 col-sm-2 col-xs-12">次数(0为无限次)</label>
+              <div class="col-md-1 col-sm-1 col-xs-12">
+                <input id="middle-name" class="form-control col-md-1 col-xs-12" type="text" name="middle-name">
+              </div>
+
+            </div>
+            <div class="col-md-1 col-sm-1 col-xs-12">
+              <p class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </p>
+            </div>
+
+          </div>
+
 
         </form>
 

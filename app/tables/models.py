@@ -2,7 +2,8 @@ import datetime
 #from uuid import uuid4
 from sqlalchemy import DateTime, Column, Integer, String, event
 from app import db
-
+import os,shutil
+import uuid
 class Target(db.Model):
     __tablename__ = 'Target'
 
@@ -45,6 +46,7 @@ class Script(db.Model):
     #uuid = Column(String(36), primary_key=True, unique=True, nullable=False, default=lambda: str(uuid4()), comment='uuid')
     id = Column(Integer, primary_key=True, autoincrement=True, comment='script_id')
     script_name = Column(String(46), nullable=False, unique=True, comment='脚本名称')
+    script_path = Column(String, nullable=False, unique=True, comment='脚本路径')
     used_number = Column(Integer,default=0,comment="使用数")
     create_time = Column(DateTime, default=datetime.datetime.now, comment='修改时间')
 
@@ -60,7 +62,21 @@ class Script(db.Model):
 #初始化数据
 @event.listens_for(Script.__table__, 'after_create')
 def create_Script(target, connection, **kw):
+    basefile =  os.path.join(os.getcwd(),"plugins")
+    if not os.path.exists(basefile):
+        os.mkdir(basefile)
     dict_list =[]
-    for i in range(11):
-        dict_list.append({'script_name': "t"+str(i)+".py"})
-    connection.execute(target.insert(), *dict_list)
+    for root,dirs,files in os.walk(basefile):  
+        for file in files: 
+            file_split_text_tuple = os.path.splitext(file)
+            if len(file_split_text_tuple) !=2:
+                continue
+            if file_split_text_tuple[-1]!=".py":
+                continue
+            file_path =  os.path.join(root,file); 
+            the_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, file))
+            the_path = os.path.join(basefile,the_uuid)
+            shutil.copyfile(file_path,the_path)
+            dict_list.append({'script_name': file,'script_path':the_path})
+    if len(dict_list) >0:
+        connection.execute(target.insert(), *dict_list)

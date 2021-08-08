@@ -29,6 +29,9 @@ def add_target():
     data = json.loads(request.get_data())
     ip = data["ip"]
     group = data["group"]
+    count = db.session.query(Target).filter(Target.ip == ip).count()
+    if count>0:
+        return jsonify(ip+"已经存在，新建失败"),400
     target = Target(ip=ip,group=group)
     db.session.add(target)
     db.session.commit()
@@ -106,8 +109,6 @@ def upload_script():
         print("----------------------------------------------------",f,"|"+file_name+"|")
         if file_name == "requirements.txt":
             basefile =  os.path.join(os.getcwd(),"plugins")
-            if not os.path.exists(basefile):
-                os.mkdir(basefile)
             the_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, file_name))
             the_path = os.path.join(basefile,the_uuid)
             f.save(the_path)
@@ -124,9 +125,10 @@ def upload_script():
             the_split = file_split_text_tuple[-1]
             if the_split == ".py":
                 #查重
+                count = db.session.query(Script).filter(Script.script_name == file_name).count()
+                if count>0:
+                    return jsonify(file_name+"已经上传过"),400
                 basefile =  os.path.join(os.getcwd(),"plugins")
-                if not os.path.exists(basefile):
-                    os.mkdir(basefile)
                 the_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, file_name))
                 the_path = os.path.join(basefile,the_uuid)
                 f.save(the_path)

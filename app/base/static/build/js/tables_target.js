@@ -21,7 +21,7 @@ function add_new_target() {
         },
         error: function (message) {
             console.log(message);
-            alert("提交数据失败！888"+message);
+            alert(message.responseJSON);
                  
             }
     });
