@@ -322,19 +322,19 @@ function init_tables_target_DataTable() {
         maxFiles: 10, //最大上传数量
         maxFilesize:5, // MB 单个文件大小上限
         filesizeBase:1024,
-        acceptedFiles: ".py",
+        acceptedFiles: ".py,.txt,.zip",
         addRemoveLinks: true,
         clickable: true,
         autoProcessQueue: true, // true:自动上传，一次性上传parallelUploads个文件，上传成功后后面排队的其他队伍也会继续排队上传。false:关闭自动上传, 手动调度 ,但每次需要点击“上传”按钮才会触发上传，排队的其他文件不会自动上传。 
         parallelUploads: 2, //最大并行处理量（一次同时上传的个数，不设置的话，默认：2个）
-        dictInvalidFileType: '仅支持以下格式文件：.py',
+        dictInvalidFileType: '仅支持以下格式文件：.py,.txt,.zip',
         dictFileTooBig: '文件超出最大5M约束',
         dictMaxFilesExceeded: '超出最大上传数量',
         dictCancelUpload: '取消上传',
         dictRemoveFile: '删除',
         dictCancelUploadConfirmation: '确认取消上传',
         dictResponseError:"文件上传失败!",
-        dictDefaultMessage:"<span class='bigger-150 bolder'><i class='icon-caret-right red'></i>拖动文件</span>上传\ <span class='smaller-80 gre'>(或者点击上传)</span> <br /> \ <i class='upload-icon icon-cloud-upload blue icon-3x'></i>",
+        dictDefaultMessage:"<span class='bigger-150 bolder'><i class='icon-caret-right red'></i>拖动文件</span>上传\ <span class='smaller-80 gre'>(或者点击上传)<br>支持 .py, requiremets.txt</span> <br /> \ <i class='upload-icon icon-cloud-upload blue icon-3x'></i>",
         init:function(){
             this.on("addedfile", function(file) { 
             //上传文件时触发的事件

@@ -6,6 +6,8 @@ from app.tables.models import Target,Script
 import json
 import os
 import imp
+import pip
+import uuid
 
 @blueprint.route('/<template>')
 @login_required
@@ -100,26 +102,38 @@ def delete_script():
 def upload_script():
     if request.method == 'POST':
         f = request.files.get('file')  # 获取文件对象
-        print("----------------------------------------------------",f)
-        '''
-        # 创建文件夹
-        basefile = os.path.join(os.path.abspath('static'),'py')
-        if not os.path.exists(basefile):
-            os.mkdir(basefile)
-
-        # 验证后缀
-        ext = os.path.splitext(f.filename)[1]
-        if ext.split('.')[-1] not in ["py"]:
-            return 'Image only!', 400
-
-        # 生成文件名　　使用uuid模块
-        #filename = get_uuid(ext)
-        '''
-        filename="1.py"
+        file_name = f.filename
+        print("----------------------------------------------------",f,"|"+file_name+"|")
+        if file_name == "requirements.txt":
+            basefile =  os.path.join(os.getcwd(),"plugins")
+            if not os.path.exists(basefile):
+                os.mkdir(basefile)
+            the_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, file_name))
+            the_path = os.path.join(basefile,the_uuid)
+            f.save(the_path)
+            try:
+                pip.main(['install', '-r', the_path,'-i','https://pypi.tuna.tsinghua.edu.cn/simple'])
+            except:
+                pip._internal.main(['install', '-r', the_path,'-i','https://pypi.tuna.tsinghua.edu.cn/simple'])
+            os.remove(the_path)
+        else:
+            print("ee")
+            file_split_text_tuple = os.path.splitext(file_name)
+            if len(file_split_text_tuple) !=2:
+                return jsonify('no split'),400
+            the_split = file_split_text_tuple[-1]
+            if the_split == ".py":
+                #查重
+                basefile =  os.path.join(os.getcwd(),"plugins")
+                if not os.path.exists(basefile):
+                    os.mkdir(basefile)
+                the_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, file_name))
+                the_path = os.path.join(basefile,the_uuid)
+                f.save(the_path)
+                plugins = imp.load_source("plugins",the_path)
+                print(plugins.plugin_name,the_path)
+                print(plugins.run("hhhh----------------------"))
+            else:
+                return jsonify('only support .py and requirements.txt'),400
         
-        path = os.path.join(os.getcwd(),filename)
-        f.save(path)
-        m = imp.load_source("ttttttdd",path)
-        print(m.plugin_name)
-        print(m.run("hhhh----------------------"))
     return jsonify('success')
