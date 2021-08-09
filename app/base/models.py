@@ -29,12 +29,12 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return str(self.username)
 
-'''
+
 #初始化用户，用于测试，后续要删除
 @event.listens_for(User.__table__, 'after_create')
 def create_User(target, connection, **kw):
-    connection.execute(target.insert(), {'username': "a","email":"a","password":"a"})
-'''
+    connection.execute(target.insert(), {'username': "ad","email":"ad","password":hashpw('ad'.encode('utf8'), gensalt())})
+
 
 
 @login_manager.user_loader
