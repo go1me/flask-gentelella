@@ -177,6 +177,8 @@ function edit_target(id) {
     });
 }
 
+
+var task_status = 0;
 function run_task(id) {
     send_data={
         "id":id
@@ -189,8 +191,8 @@ function run_task(id) {
         async:true,
         data:JSON.stringify(send_data),
         success:function(message){
-            //修改按钮和删除按钮灰掉
             console.log(message);
+            //post请求返回值改变按钮状态
         },
         error: function (message) {
             console.log(message);
@@ -198,6 +200,7 @@ function run_task(id) {
                  
             }
     });
+
 }
 
 
@@ -405,6 +408,7 @@ function init_tables_target_DataTable() {
             {"data":"script_name", title:"脚本名称"},
             {"data":"times",title:"运行次数"},
             {"data":"cycle",title:"运行周期"},
+            {"data":"task_run_status",title:"状态"},
             {"data":"create_time",title:"创建时间"},
             {
                 title:"操作",

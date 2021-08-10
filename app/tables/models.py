@@ -1,6 +1,6 @@
 import datetime
 #from uuid import uuid4
-from sqlalchemy import DateTime, Column, Integer, String, event
+from sqlalchemy import DateTime, Column, Integer, String, event,Boolean
 from app import db
 import os,shutil
 import uuid
@@ -95,6 +95,7 @@ class Task(db.Model):
     script_name = Column(String(46), nullable=False, comment='脚本名称')
     times = Column(Integer, nullable=False, default=1, comment='运行次数')
     cycle = Column(Integer,default=0,comment="运行周期")
+    task_run_status = Column(String(4),default="stop",comment="使用数")
     create_time = Column(DateTime, default=datetime.datetime.now, comment='创建时间')
 
     def __repr__(self):

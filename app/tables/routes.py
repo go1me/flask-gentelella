@@ -188,8 +188,12 @@ def run_task():
     data = json.loads(request.get_data())
     id = data["id"]
     task = db.session.query(Task).filter(Task.id == id).first()
+    if task.task_run_status == "stop":
+        task.task_run_status = "run"
+    else:
+        task.task_run_status = "stop"
 
     script = db.session.query(Script).filter(Script.script_name == task.script_name).first()
     script_path = script.script_path
-    #db.session.commit()
-    return jsonify('success')
+    db.session.commit()
+    return jsonify({"task_run_status":task.task_run_status})
