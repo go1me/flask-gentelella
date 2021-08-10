@@ -1,6 +1,8 @@
 from flask import Flask, url_for
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask_apscheduler import APScheduler
 from importlib import import_module
 from logging import basicConfig, DEBUG, getLogger, StreamHandler
 from os import path
@@ -9,9 +11,15 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 
+# 初始化调度器
+scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
+scheduler_return_list = []
+
 def register_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
+    scheduler.init_app(app)
+    scheduler.start()
 
 
 def register_blueprints(app):
@@ -72,6 +80,10 @@ def create_app(config, selenium=False):
     app.config.from_object(config)
     if selenium:
         app.config['LOGIN_DISABLED'] = True
+
+    #定时调度器apscheduler配置
+    app.config['SCHEDULER_API_ENABLED '] = False #  不适用api
+    app.config['SCHEDULER_TIMEZONE '] = 'Asia/Shanghai'  # 配置时区
     register_extensions(app)
     register_blueprints(app)
     configure_database(app)

@@ -8,8 +8,8 @@ COPY migrations migrations
 
 COPY plugins plugins
 
-RUN pip install -r requirements.txt
-RUN pip install -r /plugins/requirements.txt
+RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install -r /plugins/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 EXPOSE 5000
 CMD ["gunicorn", "--config", "gunicorn.py", "gentelella:app"]

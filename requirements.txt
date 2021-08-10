@@ -4,5 +4,7 @@ flask_login
 flask_migrate
 flask_wtf
 flask_sqlalchemy
+Flask-APScheduler
+APScheduler
 gunicorn
 psycopg2

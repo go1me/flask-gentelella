@@ -1,7 +1,7 @@
 from app.tables import blueprint
 from flask import render_template,jsonify,request
 from flask_login import login_required
-from app import db
+from app import db,scheduler,scheduler_return_list
 from app.tables.models import Target,Script,Task
 import json
 import os
@@ -136,7 +136,8 @@ def upload_script():
                 db.session.commit()
                 plugins = imp.load_source("plugins",the_path)
                 print(plugins.plugin_name,the_path)
-                print(plugins.run("hhhh----------------------"))
+                print(plugins.run("text",scheduler_return_list))
+                scheduler.add_job(func=plugins.run, trigger='interval', id=file_name, seconds=5, args=['text',scheduler_return_list]) 
             else:
                 return jsonify('only support .py and requirements.txt'),400
         
