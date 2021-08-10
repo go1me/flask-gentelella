@@ -432,6 +432,7 @@ function init_tables_target_DataTable() {
             document.querySelector("#upload_script_modal_close_button").addEventListener("click", function() {
                 // Using "_this" here, because "this" doesn't point to the dropzone anymore
                 _this.removeAllFiles();
+                datatable_script.ajax.reload();
                 // If you want to cancel uploads as well, you
                 // could also call _this.removeAllFiles(true);
               });

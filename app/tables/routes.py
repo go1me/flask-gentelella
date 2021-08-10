@@ -118,7 +118,6 @@ def upload_script():
                 pip._internal.main(['install', '-r', the_path,'-i','https://pypi.tuna.tsinghua.edu.cn/simple'])
             os.remove(the_path)
         else:
-            print("ee")
             file_split_text_tuple = os.path.splitext(file_name)
             if len(file_split_text_tuple) !=2:
                 return jsonify('no split'),400
@@ -132,6 +131,9 @@ def upload_script():
                 the_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, file_name))
                 the_path = os.path.join(basefile,the_uuid)
                 f.save(the_path)
+                script = Script(script_name=file_name,script_path=the_path)
+                db.session.add(script)
+                db.session.commit()
                 plugins = imp.load_source("plugins",the_path)
                 print(plugins.plugin_name,the_path)
                 print(plugins.run("hhhh----------------------"))
