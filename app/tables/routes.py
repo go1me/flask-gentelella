@@ -85,6 +85,11 @@ def get_scripts():
 def delete_script():
     data = json.loads(request.get_data())
     id = data["id"]
+    #删除的时候要看是否该脚本有在使用
+    script = db.session.query(Script).filter(Script.id == id).first()
+    if script.used_number>0:
+        return jsonify('该脚本还有任务在使用，无法删除'),400
+    
     db.session.query(Script).filter(Script.id == id).delete()
     db.session.commit()
     return jsonify('success')
@@ -148,6 +153,7 @@ def post_select_items():
         for script_id in scripts_id_list:
             target = db.session.query(Target).filter(Target.id == target_id).first()
             script = db.session.query(Script).filter(Script.id == script_id).first()
+            script.used_number +=1 
             task = Task(ip=target.ip,script_name=script.script_name,times=int(times),cycle=int(cycle))
             db.session.add(task)
     db.session.commit()
@@ -163,11 +169,27 @@ def get_task():
     return jsonify(data)
 
 
-@blueprint.route('/delete_task', methods=['GET'])
+@blueprint.route('/delete_task', methods=['POST'])
 @login_required
 def delete_task():
     data = json.loads(request.get_data())
     id = data["id"]
+    task = db.session.query(Task).filter(Task.id == id).first()
+    script = db.session.query(Script).filter(Script.script_name == task.script_name).first()
+    if script.used_number >0:
+        script.used_number -=1
     db.session.query(Task).filter(Task.id == id).delete()
     db.session.commit()
+    return jsonify('success')
+
+@blueprint.route('/run_task', methods=['POST'])
+@login_required
+def run_task():
+    data = json.loads(request.get_data())
+    id = data["id"]
+    task = db.session.query(Task).filter(Task.id == id).first()
+
+    script = db.session.query(Script).filter(Script.script_name == task.script_name).first()
+    script_path = script.script_path
+    #db.session.commit()
     return jsonify('success')

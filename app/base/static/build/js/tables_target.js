@@ -86,8 +86,7 @@ function clear_add_target_modal(){
         },
         error: function (message) {
             console.log(message);
-            alert("删除数据失败！888"+id+message);
-                 
+            alert(message.responseJSON);
             }
     });
 }
@@ -144,8 +143,7 @@ function edit_target(id) {
         },
         error: function (message) {
             console.log(message);
-            alert("删除数据失败！888"+id+message);
-                 
+            alert(message.responseJSON);
             }
     });
 }
@@ -168,6 +166,30 @@ function edit_target(id) {
         success:function(message){
             // 刷新表格数据，分页信息不会重置
             $('#datatable-task').DataTable().ajax.reload(null,false);
+            $('#datatable-script').DataTable().ajax.reload(null,false);
+            console.log(message);
+        },
+        error: function (message) {
+            console.log(message);
+            alert("删除数据失败！888"+id+message);
+                 
+            }
+    });
+}
+
+function run_task(id) {
+    send_data={
+        "id":id
+    }
+    $.ajax({
+        type:"post",
+        url:"/tables/run_task",
+        dataType: "json",
+        contentType:"application/json",
+        async:true,
+        data:JSON.stringify(send_data),
+        success:function(message){
+            //修改按钮和删除按钮灰掉
             console.log(message);
         },
         error: function (message) {
@@ -394,8 +416,8 @@ function init_tables_target_DataTable() {
                 "render" : function(data, type,row,meta) {
                     var id = '"' + row.id + '"';
                     var html = "";
-                    html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-primary btn-xs'> 编辑</a>"
-                    html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-success btn-xs'> 启动</a>"
+                    html += "<a href='javascript:void(0);'   onclick='edit_task("+id+ ")'  class='down btn btn-primary btn-xs'> 编辑</a>"
+                    html += "<a href='javascript:void(0);'   onclick='run_task("+id+ ")'  class='down btn btn-success btn-xs'> 启动</a>"
                     //html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-danger btn-xs'> 停止</a>"
                     html += "<a href='javascript:void(0);'   onclick='delete_task("+id+ ")'  class='down btn btn-dark btn-xs'> 删除</a>"
                     return html;
