@@ -282,7 +282,80 @@ function init_tables_target_DataTable() {
             {"data":"id",title:"id"},
             {"data":"script_name", title:"脚本名称"},
             {"data":"used_number",title:"使用数"},
-            {"data":"create_time",title:"更新时间"},
+            {"data":"create_time",title:"创建时间"},
+            {
+                title:"操作",
+                "orderable" : false,
+                //"targets" : 2,//操作按钮目标列
+                "data" : null,
+                //"sWidth" :"250px",
+                'sClass': "text-center",
+                "render" : function(data, type,row,meta) {
+                    var id = '"' + row.id + '"';
+                    var html = "";
+                    html += "<a href='javascript:void(0);'   onclick='delete_script("+id+ ")'  class='down btn btn-default '> 删除</a>"
+                    return html;
+                }
+            }
+        ],
+        responsive: true,
+      'order': [[ 1, 'asc' ]],
+      'columnDefs': [
+        {
+            'targets': 0,
+            'checkboxes': {
+                'selectRow': true
+            }
+        }
+      ],
+      'select': {
+        'style': 'multi'
+     },
+    });
+
+
+
+    var datatable_task = $('#datatable-task').DataTable({
+        //dom: "Blfrtip",
+        dom: "<'row'<'col-md-3'B><'col-md-6'f>r<'col-md-2 text-right'l>>t<'row'<'col-md-6'i><'col-md-6 text-right'p>>",
+        buttons: [
+            {
+                extend: "copy",
+                text: '拷贝',
+                className: "btn-sm"
+            },
+            {
+                extend: "csv",
+                text: '导出csv',
+                className: "btn-sm"
+            },
+            {
+                extend: "excelHtml5",
+                className: "btn-sm"
+            },
+            {
+                text: 'Reload',
+                text: '刷新',
+                className: "btn-sm",
+                action: function ( e, dt, node, config ) {
+                    dt.ajax.reload();
+                }
+            }
+        ],
+        "ajax": {
+            // "url": "static/objects2.txt", // This works for a static file
+            "url": "/tables/get_task", // This now also works
+            "dataType": "json",
+            "dataSrc": "data",
+            "contentType":"application/json"
+        },
+        "columns": [
+            {"data":"id",title:"id"},
+            {"data":"ip", title:"ip地址"},
+            {"data":"script_name", title:"脚本名称"},
+            {"data":"times",title:"运行次数"},
+            {"data":"cycle",title:"运行周期"},
+            {"data":"create_time",title:"创建时间"},
             {
                 title:"操作",
                 "orderable" : false,
@@ -370,7 +443,7 @@ function init_tables_target_DataTable() {
     });
     
     //提交选择的目标和脚本到后台
-    /*$('#frm-example').on('submit', function(e){
+    $('#target_scrip_frm').on('submit', function(e){
         var form = this;
 
         var target_selected = datatable_target.column(0).checkboxes.selected();
@@ -387,7 +460,14 @@ function init_tables_target_DataTable() {
 
         });
 
-        selected_data={"targets":target_selected_list,"script":script_selected_list}
+        var script_run_times = $('#script_run_times').val();
+        var script_run_cycle = $('#script_run_cycle').val();
+
+        selected_data={
+            "targets":target_selected_list,
+            "script":script_selected_list,
+            "times":script_run_times,
+            "cycle":script_run_cycle}
 
         $.ajax({   
             contentType: 'application/json',
@@ -404,7 +484,7 @@ function init_tables_target_DataTable() {
                      
                 }
         }); 
-    });*/
+    });
 
 }
 

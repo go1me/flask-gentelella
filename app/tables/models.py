@@ -34,7 +34,7 @@ def create_Target(target, connection, **kw):
     target.commit()
     '''
     dict_list =[]
-    for i in range(15):
+    for i in range(3):
         dict_list.append({'ip': "192.168.1."+str(i)})
     connection.execute(target.insert(), *dict_list)
     #connection.execute(target.insert(), {'ip': "192.168.1.1"}, {'ip': "192.168.1.2"}, {'ip': "192.168.1.3"})
@@ -80,3 +80,23 @@ def create_Script(target, connection, **kw):
             dict_list.append({'script_name': file,'script_path':the_path})
     if len(dict_list) >0:
         connection.execute(target.insert(), *dict_list)
+
+
+class Task(db.Model):
+    __tablename__ = 'Task'
+
+    #uuid = Column(String(36), primary_key=True, unique=True, nullable=False, default=lambda: str(uuid4()), comment='uuid')
+    id = Column(Integer, primary_key=True, autoincrement=True, comment='task_id')
+    ip = Column(String(46), nullable=False, comment='ip地址')
+    script_name = Column(String(46), nullable=False, comment='脚本名称')
+    times = Column(Integer, nullable=False, default=1, comment='运行次数')
+    cycle = Column(Integer,default=0,comment="运行周期")
+    create_time = Column(DateTime, default=datetime.datetime.now, comment='创建时间')
+
+    def __repr__(self):
+        return str(self.ip+"|"+self.script_name)
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict

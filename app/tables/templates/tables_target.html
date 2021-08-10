@@ -36,7 +36,7 @@
       <div class="clearfix"></div>
 
       <div class="row">
-        <form name="frm-example" id="frm-example">
+        <form name="target_scrip_frm" id="target_scrip_frm">
 
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
@@ -105,45 +105,70 @@
             <p class="text-muted font-13 m-b-30">
               勾选目标列表和脚本列表中的相关项，即可将脚本运用于目标，可以选择单词运行，和重复运行，重复请选择重复周期
             </p>
+            <p class="text-muted font-13 m-b-30">
+              次数为0代表脚本运行无限次，次数为1代表一次，次数为不等于0和1的N，代表N次
+            </p>
+            <p class="text-muted font-13 m-b-30">
+              周期为0代表无限循环，周期为非0的N，代表周期为N秒
+            </p>
           </div>
 
           <div class="row col-md-12 col-sm-12 col-xs-12">
-            
-            <div class="form-group">
-              <div class="col-md-2 col-sm-2 col-xs-12">
-                <div id="gender" class="btn-group" data-toggle="buttons">
-                  <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                    <input type="radio" name="gender" value="signal"> &nbsp; 单次 &nbsp;
-                  </label>
-                  <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                    <input type="radio" name="gender" value="repeat"> 重复
-                  </label>
-                </div>
+
+            <div class="form-group form-horizontal form-label-left col-md-3 col-sm-3 col-xs-12">
+              <label for="script_run_times" class="control-label col-md-3 col-sm-3 col-xs-12">次数</label>
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <input id="script_run_times" class="form-control" type="text" value="1" name="script_run_times" oninput="value=value.replace(/[^\d]/g,'')">
               </div>
             </div>
-            <div class="form-group">
-              <label for="middle-name" class="control-label col-md-1 col-sm-1 col-xs-12">周期</label>
-              <div class="col-md-2 col-sm-2 col-xs-12">
-                <input id="middle-name" class="form-control col-md-1 col-xs-12" type="text" name="middle-name">
-              </div>
-              <label for="middle-name" class="control-label col-md-1 col-sm-1 col-xs-12">秒</label>
 
-              <label for="middle-name" class="control-label col-md-2 col-sm-2 col-xs-12">次数(0为无限次)</label>
+
+            <div class="form-group form-horizontal form-label-left col-md-4 col-sm-4 col-xs-12">
+              <label for="script_run_cycle" class="control-label col-md-3 col-sm-3 col-xs-12">周期</label>
+              <div class="col-md-8 col-sm-8 col-xs-12">
+                <input id="script_run_cycle" class="form-control" type="text" value="0" name="script_run_cycle" oninput="value=value.replace(/[^\d]/g,'')">
+              </div>
+              <label class="control-label col-md-1 col-sm-1 col-xs-12">秒</label>
+            </div>
+            <div class="form-group">
               <div class="col-md-1 col-sm-1 col-xs-12">
-                <input id="middle-name" class="form-control col-md-1 col-xs-12" type="text" name="middle-name">
-              </div>
-
-            </div>
-            <div class="col-md-1 col-sm-1 col-xs-12">
-              <p class="form-group">
                 <button type="submit" class="btn btn-primary">Submit</button>
-              </p>
+              </div>
             </div>
 
           </div>
-
-
         </form>
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>任务列表</small></h2>
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Settings 1</a>
+                    </li>
+                    <li><a href="#">Settings 2</a>
+                    </li>
+                  </ul>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <p class="text-muted font-13 m-b-30">
+                创建的任务
+              </p>
+              <table id="datatable-task" class="table table-striped table-bordered bulk_action">
+              </table>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>

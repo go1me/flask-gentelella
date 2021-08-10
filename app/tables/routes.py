@@ -2,7 +2,7 @@ from app.tables import blueprint
 from flask import render_template,jsonify,request
 from flask_login import login_required
 from app import db
-from app.tables.models import Target,Script
+from app.tables.models import Target,Script,Task
 import json
 import os
 import imp
@@ -74,11 +74,11 @@ def get_target_by_id():
 @login_required
 def post_select_items():
     data = json.loads(request.get_data())
-    print(data,type(data))
+    print("----------------------------",data,type(data))
+    task = Task(ip=str(data["targets"]),script_name=str(data["script"]),times=int(data["times"]),cycle=int(data["cycle"]))
+    db.session.add(task)
+    db.session.commit()
     return data
-
-
-
 
 
 @blueprint.route('/get_scripts', methods=['GET'])
@@ -139,3 +139,13 @@ def upload_script():
                 return jsonify('only support .py and requirements.txt'),400
         
     return jsonify('success')
+
+
+
+@blueprint.route('/get_task', methods=['GET'])
+@login_required
+def get_task():
+    data = {
+        "data":[i.to_json() for i in db.session.query(Task).all()]
+    } 
+    return jsonify(data)
