@@ -70,16 +70,6 @@ def get_target_by_id():
     return jsonify(target)
 
 
-@blueprint.route('/post_select_items', methods=['POST'])
-@login_required
-def post_select_items():
-    data = json.loads(request.get_data())
-    print("----------------------------",data,type(data))
-    task = Task(ip=str(data["targets"]),script_name=str(data["script"]),times=int(data["times"]),cycle=int(data["cycle"]))
-    db.session.add(task)
-    db.session.commit()
-    return data
-
 
 @blueprint.route('/get_scripts', methods=['GET'])
 @login_required
@@ -145,6 +135,25 @@ def upload_script():
 
 
 
+@blueprint.route('/post_select_items', methods=['POST'])
+@login_required
+def post_select_items():
+    data = json.loads(request.get_data())
+    print("----------------------------",data,type(data))
+    targets_id_list = data["targets_list"]
+    scripts_id_list = data["scripts_list"]
+    times = data["times"]
+    cycle = data["cycle"]
+    for target_id in targets_id_list:
+        for script_id in scripts_id_list:
+            target = db.session.query(Target).filter(Target.id == target_id).first()
+            script = db.session.query(Script).filter(Script.id == script_id).first()
+            task = Task(ip=target.ip,script_name=script.script_name,times=int(times),cycle=int(cycle))
+            db.session.add(task)
+    db.session.commit()
+    return jsonify('success')
+
+
 @blueprint.route('/get_task', methods=['GET'])
 @login_required
 def get_task():
@@ -152,3 +161,13 @@ def get_task():
         "data":[i.to_json() for i in db.session.query(Task).all()]
     } 
     return jsonify(data)
+
+
+@blueprint.route('/delete_task', methods=['GET'])
+@login_required
+def delete_task():
+    data = json.loads(request.get_data())
+    id = data["id"]
+    db.session.query(Task).filter(Task.id == id).delete()
+    db.session.commit()
+    return jsonify('success')

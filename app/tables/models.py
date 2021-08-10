@@ -22,6 +22,8 @@ class Target(db.Model):
         dict = self.__dict__
         if "_sa_instance_state" in dict:
             del dict["_sa_instance_state"]
+        if "create_time" in dict:
+            dict["create_time"] = dict["create_time"].strftime("%Y-%m-%d %H:%M:%S")
         return dict
 
 #初始化数据
@@ -56,6 +58,8 @@ class Script(db.Model):
         dict = self.__dict__
         if "_sa_instance_state" in dict:
             del dict["_sa_instance_state"]
+        if "create_time" in dict:
+            dict["create_time"] = dict["create_time"].strftime("%Y-%m-%d %H:%M:%S")
         return dict
 
 
@@ -99,4 +103,6 @@ class Task(db.Model):
         dict = self.__dict__
         if "_sa_instance_state" in dict:
             del dict["_sa_instance_state"]
+        if "create_time" in dict:
+            dict["create_time"] = dict["create_time"].strftime("%Y-%m-%d %H:%M:%S")
         return dict

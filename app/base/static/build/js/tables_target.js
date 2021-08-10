@@ -151,6 +151,34 @@ function edit_target(id) {
 }
 
 
+/**
+ * 删除script
+ */
+ function delete_task(id) {
+    send_data={
+        "id":id
+    }
+    $.ajax({
+        type:"post",
+        url:"/tables/delete_task",
+        dataType: "json",
+        contentType:"application/json",
+        async:true,
+        data:JSON.stringify(send_data),
+        success:function(message){
+            // 刷新表格数据，分页信息不会重置
+            $('#datatable-task').DataTable().ajax.reload(null,false);
+            console.log(message);
+        },
+        error: function (message) {
+            console.log(message);
+            alert("删除数据失败！888"+id+message);
+                 
+            }
+    });
+}
+
+
 function init_tables_target_DataTable() {
     var datatable_target = $('#datatable-target').DataTable({
         //dom: "Blfrtip",
@@ -206,15 +234,15 @@ function init_tables_target_DataTable() {
                 title:"操作",
                 "orderable" : false,
                 //"targets" : 2,//操作按钮目标列
-                "data" : null,
+                "data" : "",
                 //"sWidth" :"250px",
                 'sClass': "text-center",
                 "render" : function(data, type,row,meta) {
                     var id = '"' + row.id + '"';
                     var html = "";
                     //html += "<button onclick='edit_target("+ id +")' style='margin-right:10px;'  class='down btn btn-default '>编辑</button>"
-                    html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-default '> 编辑</a>"
-                    html += "<a href='javascript:void(0);'   onclick='delete_target("+id+ ")'  class='down btn btn-default '> 删除</a>"
+                    html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-primary btn-xs'> 编辑</a>"
+                    html += "<a href='javascript:void(0);'   onclick='delete_target("+id+ ")'  class='down btn btn-dark btn-xs'> 删除</a>"
                     return html;
                 }
             }
@@ -287,13 +315,13 @@ function init_tables_target_DataTable() {
                 title:"操作",
                 "orderable" : false,
                 //"targets" : 2,//操作按钮目标列
-                "data" : null,
+                "data" : "",
                 //"sWidth" :"250px",
                 'sClass': "text-center",
                 "render" : function(data, type,row,meta) {
                     var id = '"' + row.id + '"';
                     var html = "";
-                    html += "<a href='javascript:void(0);'   onclick='delete_script("+id+ ")'  class='down btn btn-default '> 删除</a>"
+                    html += "<a href='javascript:void(0);'   onclick='delete_script("+id+ ")'  class='down btn btn-dark btn-xs'> 删除</a>"
                     return html;
                 }
             }
@@ -360,13 +388,16 @@ function init_tables_target_DataTable() {
                 title:"操作",
                 "orderable" : false,
                 //"targets" : 2,//操作按钮目标列
-                "data" : null,
+                "data" : "",
                 //"sWidth" :"250px",
                 'sClass': "text-center",
                 "render" : function(data, type,row,meta) {
                     var id = '"' + row.id + '"';
                     var html = "";
-                    html += "<a href='javascript:void(0);'   onclick='delete_script("+id+ ")'  class='down btn btn-default '> 删除</a>"
+                    html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-primary btn-xs'> 编辑</a>"
+                    html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-success btn-xs'> 启动</a>"
+                    //html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-danger btn-xs'> 停止</a>"
+                    html += "<a href='javascript:void(0);'   onclick='delete_task("+id+ ")'  class='down btn btn-dark btn-xs'> 删除</a>"
                     return html;
                 }
             }
@@ -465,8 +496,8 @@ function init_tables_target_DataTable() {
         var script_run_cycle = $('#script_run_cycle').val();
 
         selected_data={
-            "targets":target_selected_list,
-            "script":script_selected_list,
+            "targets_list":target_selected_list,
+            "scripts_list":script_selected_list,
             "times":script_run_times,
             "cycle":script_run_cycle}
 
