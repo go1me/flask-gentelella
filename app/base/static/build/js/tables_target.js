@@ -178,7 +178,6 @@ function edit_target(id) {
 }
 
 
-var task_status = 0;
 function run_task(id) {
     send_data={
         "id":id
@@ -192,11 +191,28 @@ function run_task(id) {
         data:JSON.stringify(send_data),
         success:function(message){
             console.log(message);
+            response = message
+            console.log(response);
+            if(response.task_run_status=="run"){
+                $("#edit_task_href"+id).attr("disabled", true);
+                $("#delete_task_href"+id).attr("disabled", true);
+                $("#run_task_href"+id).removeClass("btn-success");
+                $("#run_task_href"+id).addClass("btn-danger");
+                $("#run_task_href"+id).val("关闭");
+            }else{
+                $("#edit_task_href").attr("disabled", false);
+                $("#delete_task_href").attr("disabled", false);
+                $("#run_task_href").removeClass("btn-danger");
+                $("#run_task_href").addClass("btn-success");
+                $("#run_task_href").val("启动");
+
+            }
+            $('#datatable-task').DataTable().ajax.reload(null,false);
             //post请求返回值改变按钮状态
         },
         error: function (message) {
             console.log(message);
-            alert("删除数据失败！888"+id+message);
+            alert(message);
                  
             }
     });
@@ -420,10 +436,10 @@ function init_tables_target_DataTable() {
                 "render" : function(data, type,row,meta) {
                     var id = '"' + row.id + '"';
                     var html = "";
-                    html += "<a href='javascript:void(0);'   onclick='edit_task("+id+ ")'  class='down btn btn-primary btn-xs'> 编辑</a>"
-                    html += "<a href='javascript:void(0);'   onclick='run_task("+id+ ")'  class='down btn btn-success btn-xs'> 启动</a>"
+                    html += "<a href='javascript:void(0);'   onclick='edit_task("+id+ ")'  class='down btn btn-primary btn-xs' id='edit_task_href'"+id+"> 编辑</a>"
+                    html += "<a href='javascript:void(0);'   onclick='run_task("+id+ ")'  class='down btn btn-success btn-xs' id='run_task_href'"+id+"> 启动</a>"
                     //html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-danger btn-xs'> 停止</a>"
-                    html += "<a href='javascript:void(0);'   onclick='delete_task("+id+ ")'  class='down btn btn-dark btn-xs'> 删除</a>"
+                    html += "<a href='javascript:void(0);'   onclick='delete_task("+id+ ")'  class='down btn btn-dark btn-xs' id='delete_task_href'"+id+"> 删除</a>"
                     return html;
                 }
             }
