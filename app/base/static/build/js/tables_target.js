@@ -7,7 +7,7 @@ function add_new_target() {
             }
     $.ajax({
         type:"post",
-        url:"/tables/add_target",
+        url:"/ctf/add_target",
         dataType: "json",
         contentType:"application/json",
         async:true,
@@ -38,7 +38,7 @@ function update_target() {
     console.log(send_data);
     $.ajax({
         type:"post",
-        url:"/tables/update_target",
+        url:"/ctf/update_target",
         dataType: "json",
         contentType:"application/json",
         async:true,
@@ -74,7 +74,7 @@ function clear_add_target_modal(){
     }
     $.ajax({
         type:"post",
-        url:"/tables/delete_target",
+        url:"/ctf/delete_target",
         dataType: "json",
         contentType:"application/json",
         async:true,
@@ -99,7 +99,7 @@ function edit_target(id) {
     console.log(send_data)
     $.ajax({
         type:"post",
-        url:"/tables/get_target_by_id",
+        url:"/ctf/get_target_by_id",
         dataType: "json",
         contentType:"application/json",
         async:true,
@@ -131,7 +131,7 @@ function edit_target(id) {
     }
     $.ajax({
         type:"post",
-        url:"/tables/delete_script",
+        url:"/ctf/delete_script",
         dataType: "json",
         contentType:"application/json",
         async:true,
@@ -158,7 +158,7 @@ function edit_target(id) {
     }
     $.ajax({
         type:"post",
-        url:"/tables/delete_task",
+        url:"/ctf/delete_task",
         dataType: "json",
         contentType:"application/json",
         async:true,
@@ -184,7 +184,7 @@ function run_task(id) {
     }
     $.ajax({
         type:"post",
-        url:"/tables/run_task",
+        url:"/ctf/run_task",
         dataType: "json",
         contentType:"application/json",
         async:true,
@@ -260,7 +260,7 @@ function init_tables_target_DataTable() {
         ],
         "ajax": {
             // "url": "static/objects2.txt", // This works for a static file
-            "url": "/tables/get_targets", // This now also works
+            "url": "/ctf/get_targets", // This now also works
             "dataType": "json",
             "dataSrc": "data",
             "contentType":"application/json"
@@ -344,7 +344,7 @@ function init_tables_target_DataTable() {
         ],
         "ajax": {
             // "url": "static/objects2.txt", // This works for a static file
-            "url": "/tables/get_scripts", // This now also works
+            "url": "/ctf/get_scripts", // This now also works
             "dataType": "json",
             "dataSrc": "data",
             "contentType":"application/json"
@@ -416,7 +416,7 @@ function init_tables_target_DataTable() {
         ],
         "ajax": {
             // "url": "static/objects2.txt", // This works for a static file
-            "url": "/tables/get_task", // This now also works
+            "url": "/ctf/get_task", // This now also works
             "dataType": "json",
             "dataSrc": "data",
             "contentType":"application/json"
@@ -476,7 +476,7 @@ function init_tables_target_DataTable() {
 
 
     var dropzone_upload_script_modal=$("#dropzone_upload_script_modal").dropzone({
-        url: "/tables/upload_script", //必须填写
+        url: "/ctf/upload_script", //必须填写
         method:"post",  //也可用put
         //paramName:"Filedata", //默认为file
         maxFiles: 10, //最大上传数量
@@ -560,7 +560,7 @@ function init_tables_target_DataTable() {
         $.ajax({   
             contentType: 'application/json',
             type: 'POST',
-            url: "/tables/post_select_items",
+            url: "/ctf/post_select_items",
             dataType: "json",
                data: JSON.stringify(selected_data),
             success: function (message) {
