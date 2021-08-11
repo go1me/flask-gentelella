@@ -171,7 +171,7 @@ function edit_target(id) {
         },
         error: function (message) {
             console.log(message);
-            alert("删除数据失败！888"+id+message);
+            alert(message.responseJSON);
                  
             }
     });

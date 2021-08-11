@@ -129,10 +129,6 @@ def upload_script():
                 script = Script(script_name=file_name,script_path=the_path)
                 db.session.add(script)
                 db.session.commit()
-                plugins = imp.load_source("plugins",the_path)
-                print(plugins.plugin_name,the_path)
-                print(plugins.run("text",scheduler_return_list))
-                scheduler.add_job(func=plugins.run, trigger='interval', id=file_name, seconds=5, args=['text',scheduler_return_list]) 
             else:
                 return jsonify('only support .py and requirements.txt'),400
         
@@ -175,6 +171,8 @@ def delete_task():
     data = json.loads(request.get_data())
     id = data["id"]
     task = db.session.query(Task).filter(Task.id == id).first()
+    if task.task_run_status == "run":
+        return jsonify('运行中任务无法删除')
     script = db.session.query(Script).filter(Script.script_name == task.script_name).first()
     if script.used_number >0:
         script.used_number -=1
@@ -190,10 +188,19 @@ def run_task():
     task = db.session.query(Task).filter(Task.id == id).first()
     if task.task_run_status == "stop":
         task.task_run_status = "run"
+        script = db.session.query(Script).filter(Script.script_name == task.script_name).first()
+        script_path = script.script_path
+        plugins = imp.load_source("plugins",script_path)
+        print(plugins.plugin_name,script_path)
+        if task.times ==0:
+            scheduler.add_job(func=plugins.run, trigger='interval', id=task.script_name, seconds=task.cycle, args=[task.ip,scheduler_return_list]) 
+        elif task.times >0:
+            run_time=task.cycle*task.times
+
+            pass
     else:
         task.task_run_status = "stop"
 
-    script = db.session.query(Script).filter(Script.script_name == task.script_name).first()
-    script_path = script.script_path
+    
     db.session.commit()
     return jsonify({"task_run_status":task.task_run_status})
