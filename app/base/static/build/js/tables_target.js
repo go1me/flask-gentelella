@@ -190,25 +190,26 @@ function run_task(id) {
         async:true,
         data:JSON.stringify(send_data),
         success:function(message){
+            $('#datatable-task').DataTable().ajax.reload(null,false);
+            //post请求返回值改变按钮状态
             console.log(message);
-            response = message
-            console.log(response);
-            if(response.task_run_status=="run"){
+            /*if(response.task_run_status=="run"){
                 $("#edit_task_href"+id).attr("disabled", true);
                 $("#delete_task_href"+id).attr("disabled", true);
                 $("#run_task_href"+id).removeClass("btn-success");
                 $("#run_task_href"+id).addClass("btn-danger");
-                $("#run_task_href"+id).val("关闭");
+                $("#run_task_href"+id).text("关闭");
+                console.log($("#run_task_href"+id).text());
+                console.log("#run_task_href"+id);
             }else{
-                $("#edit_task_href").attr("disabled", false);
-                $("#delete_task_href").attr("disabled", false);
-                $("#run_task_href").removeClass("btn-danger");
-                $("#run_task_href").addClass("btn-success");
-                $("#run_task_href").val("启动");
-
-            }
-            $('#datatable-task').DataTable().ajax.reload(null,false);
-            //post请求返回值改变按钮状态
+                $("#edit_task_href"+id).attr("disabled", false);
+                $("#delete_task_href"+id).attr("disabled", false);
+                $("#run_task_href"+id).removeClass("btn-danger");
+                $("#run_task_href"+id).addClass("btn-success");
+                $("#run_task_href"+id).text("启动");
+                console.log($("#run_task_href"+id).text());
+                console.log("#run_task_href"+id);
+            }*/
         },
         error: function (message) {
             console.log(message);
@@ -436,10 +437,20 @@ function init_tables_target_DataTable() {
                 "render" : function(data, type,row,meta) {
                     var id = '"' + row.id + '"';
                     var html = "";
-                    html += "<a href='javascript:void(0);'   onclick='edit_task("+id+ ")'  class='down btn btn-primary btn-xs' id='edit_task_href'"+id+"> 编辑</a>"
-                    html += "<a href='javascript:void(0);'   onclick='run_task("+id+ ")'  class='down btn btn-success btn-xs' id='run_task_href'"+id+"> 启动</a>"
+                    /*实现点击run按钮，其他两个按钮disable和切换run按钮显示及样式功能*/
+                    if (row.task_run_status == "run"){
+                        run_task_href_text = "停止"
+                        run_task_button_class = "btn-danger"
+                        disabled_flag = "disabled=true"
+                    }else{
+                        run_task_href_text = "启动"
+                        run_task_button_class = "btn-success"
+                        disabled_flag = " "
+                    }
+                    html += "<a href='javascript:void(0);'"+disabled_flag+"  onclick='edit_task("+id+ ")'  class='down btn btn-primary btn-xs' id='edit_task_href"+row.id+"'> 编辑</a>"
+                    html += "<a href='javascript:void(0);'  onclick='run_task("+id+ ")'  class='down btn "+run_task_button_class+" btn-xs' id='run_task_href"+row.id+"'>"+run_task_href_text+"</a>"
                     //html += "<a href='javascript:void(0);'   onclick='edit_target("+id+ ")'  class='down btn btn-danger btn-xs'> 停止</a>"
-                    html += "<a href='javascript:void(0);'   onclick='delete_task("+id+ ")'  class='down btn btn-dark btn-xs' id='delete_task_href'"+id+"> 删除</a>"
+                    html += "<a href='javascript:void(0);'"+disabled_flag+"  onclick='delete_task("+id+ ")'  class='down btn btn-dark btn-xs' id='delete_task_href"+row.id+"'> 删除</a>"
                     return html;
                 }
             }
