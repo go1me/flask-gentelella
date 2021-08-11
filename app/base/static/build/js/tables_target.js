@@ -291,6 +291,7 @@ function init_tables_target_DataTable() {
 
         ],
         responsive: true,
+        "autoWidth": false,
       'order': [[ 1, 'asc' ]],
       'columnDefs': [
         {
@@ -369,6 +370,7 @@ function init_tables_target_DataTable() {
             }
         ],
         responsive: true,
+        "autoWidth": false,
       'order': [[ 1, 'asc' ]],
       'columnDefs': [
         {
@@ -456,6 +458,7 @@ function init_tables_target_DataTable() {
             }
         ],
         responsive: true,
+        "autoWidth": false,
       'order': [[ 1, 'asc' ]],
       'columnDefs': [
         {
