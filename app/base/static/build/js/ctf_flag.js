@@ -345,7 +345,7 @@ function init_flag_echarts() {
         $.ajax({
             cache: false,
             type: "POST",
-            url: "/get_flag_for_bar_y_category_stack", //把表单数据发送到/viewdata
+            url: "/ctf/get_flag_for_bar_y_category_stack", //把表单数据发送到/viewdata
             data: null, // 发送的数据
             dataType : "json",  //返回数据形式为json
             async: false,
@@ -355,15 +355,15 @@ function init_flag_echarts() {
                 alert(request.responseJSON);
             },
             success: function(result) {
-                //console.log(result);
+                console.log(result);
                 for (i = 0, max = result.ips.length; i < max; i++) { //注意：result.Goods_name.length
-                    option.yAxis[0].data.push(result.ips[i]);
+                    option.yAxis.data.push(result.ips[i]);
                     option.series[0].data.push(result.flags_send[i]);//已发送
                     option.series[1].data.push(result.flags_un_send[i]);//未发送
                     option.series[2].data.push(result.flags_send_error[i]);//发送失败
                 };
                 // 为echarts对象加载数据
-                myChart.setOption(option);
+                echartBar.setOption(option);
             }
         });
 

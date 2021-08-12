@@ -8,7 +8,6 @@ import os
 import imp
 import pip
 import uuid
-import pandas as pd
 
 @blueprint.route('/<template>')
 @login_required
@@ -270,19 +269,33 @@ def get_flag_for_bar_y_category_stack():
     
     
     flags = db.session.query(Flag).all()
-    flags_list = []
+    ips=[]
+    flags_send=[]
+    flags_un_send=[]
+    flags_send_error=[]
 
     for flag in flags:
-        flags_list.append(flag.to_json())
+        ip = flag.ip
+        flag_status = flag.flag_status
+        try:
+            the_index = ips.index(ip)      
+        except:
+            the_index = len(ips)
+            ips.append(ip)
+            flags_send.append(0)
+            flags_un_send.append(0)
+            flags_send_error.append(0)
 
-    flags_df = pd.DataFrame(flags_list)
+        if flag_status == "已发送":
+            flags_send[the_index]+=1
+        elif flag_status=="未发送":
+            flags_un_send[the_index]+=1
+        elif flag_status=="发送失败":
+            flags_send_error[the_index]+=1
+        else:
+            dddd
 
-    send_df = pd.DataFrame(columns=["flags_send","flags_un_send","flags_send_error"],
-                            index=flags_df['ip'].drop_duplicates().values.tolist())
-    
-
-    db.session.commit()
-    return jsonify(ips = flags_df['ip'].drop_duplicates().values.tolist(),
-                   flags_send = [x[1] for x in res],
-                   flags_un_send = [x[1] for x in res],
-                   flags_send_error = [x[1] for x in res])
+    return jsonify(ips = ips,
+                   flags_send = flags_send,
+                   flags_un_send = flags_un_send,
+                   flags_send_error = flags_send_error)
