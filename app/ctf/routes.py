@@ -2,7 +2,7 @@ from app.ctf import blueprint
 from flask import render_template,jsonify,request
 from flask_login import login_required
 from app import db,scheduler,scheduler_return_list
-from app.ctf.models import Target,Script,Task
+from app.ctf.models import Target,Script,Task,Flag
 import json
 import os
 import imp
@@ -204,3 +204,60 @@ def run_task():
     
     db.session.commit()
     return jsonify({"task_run_status":task.task_run_status})
+
+
+
+@blueprint.route('/get_flags', methods=['GET'])
+@login_required
+def get_flags():
+    data = {
+        "data":[i.to_json() for i in db.session.query(Flag).all()]
+    } 
+    return jsonify(data)
+
+@blueprint.route('/add_flag', methods=['POST'])
+@login_required
+def add_flag():
+    data = json.loads(request.get_data())
+    flag = data["flag"]
+    ip = data["ip"]
+    flag_status = data["flag_status"]
+    
+    count = db.session.query(Flag).filter(Flag.flag == flag).count()
+    if count>0:
+        return jsonify(ip+"已经存在，新增失败"),400
+    db.session.add( Flag(flag=flag,ip=ip,flag_status=flag_status))
+    db.session.commit()
+    return jsonify('success')
+
+
+@blueprint.route('/delete_flag', methods=['POST'])
+@login_required
+def delete_flag():
+    data = json.loads(request.get_data())
+    id = data["id"]
+    db.session.query(Flag).filter(Flag.id == id).delete()
+    db.session.commit()
+    return jsonify('success')
+
+#这些重复函数可以合并，后续考虑
+@blueprint.route('/get_flag_by_id', methods=['POST'])
+@login_required
+def get_flag_by_id():
+    data = json.loads(request.get_data())
+    id = data["id"]
+    flag = db.session.query(Flag).filter(Flag.id == id).first().to_json()
+    return jsonify(flag)
+
+@blueprint.route('/update_flag', methods=['POST'])
+@login_required
+def update_flag():
+    data = json.loads(request.get_data())
+    flag = data["flag"]
+    flag_status = data["flag_status"]
+    # 更新多条
+    print("-------------",flag,flag_status)
+    res = db.session.query(Flag).filter(Flag.flag == flag).update({"flag":flag,"flag_status":flag_status})
+    print(res) # 6 res就是我们当前这句更新语句所更新的行数
+    db.session.commit()
+    return jsonify('success')

@@ -72,6 +72,9 @@ function clear_add_target_modal(){
     send_data={
         "id":id
     }
+    if (!confirm("确认要删除？就怕您点错了")) { 
+        return
+    } 
     $.ajax({
         type:"post",
         url:"/ctf/delete_target",
@@ -95,8 +98,6 @@ function edit_target(id) {
     send_data={
         "id":id
     }
-    console.log("edit_target");
-    console.log(send_data)
     $.ajax({
         type:"post",
         url:"/ctf/get_target_by_id",
@@ -129,6 +130,9 @@ function edit_target(id) {
     send_data={
         "id":id
     }
+    if (!confirm("确认要删除？就怕您点错了")) { 
+        return
+    } 
     $.ajax({
         type:"post",
         url:"/ctf/delete_script",
@@ -156,6 +160,9 @@ function edit_target(id) {
     send_data={
         "id":id
     }
+    if (!confirm("确认要删除？就怕您点错了")) { 
+        return
+    } 
     $.ajax({
         type:"post",
         url:"/ctf/delete_task",

@@ -11,7 +11,7 @@ class Target(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True, comment='target_id')
     ip = Column(String(46), nullable=False, unique=True, comment='ip地址')
     group = Column(String(48), default="default",nullable=False, comment='分组')
-    status = Column(String(4), default="down",nullable=False, comment='ip地址')
+    status = Column(String(4), default="down",nullable=False, comment='状态')
     flag_number = Column(Integer,default=0,comment="flag数")
     create_time = Column(DateTime, default=datetime.datetime.now, comment='修改时间')
     #update_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
@@ -107,3 +107,33 @@ class Task(db.Model):
         if "create_time" in dict:
             dict["create_time"] = dict["create_time"].strftime("%Y-%m-%d %H:%M:%S")
         return dict
+
+
+
+class Flag(db.Model):
+    __tablename__ = 'Flag'
+
+    #uuid = Column(String(36), primary_key=True, unique=True, nullable=False, default=lambda: str(uuid4()), comment='uuid')
+    id = Column(Integer, primary_key=True, autoincrement=True, comment='flag_id')
+    flag = Column(String(46), nullable=False, unique=True, comment='flag')
+    ip = Column(String(46), nullable=False, comment='ip地址')
+    flag_status = Column(String(8), default="未发送",nullable=False, comment='状态')
+    create_time = Column(DateTime, default=datetime.datetime.now, comment='创建时间')
+
+    def __repr__(self):
+        return str(self.ip+"|"+self.flag)
+    def to_json(self):
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        if "create_time" in dict:
+            dict["create_time"] = dict["create_time"].strftime("%Y-%m-%d %H:%M:%S")
+        return dict
+
+    #初始化数据
+@event.listens_for(Flag.__table__, 'after_create')
+def create_Flag(target, connection, **kw):
+    dict_list =[]
+    for i in range(3):
+        dict_list.append({'ip': "192.168.1."+str(i),"flag":str(i)})
+    connection.execute(target.insert(), *dict_list)
