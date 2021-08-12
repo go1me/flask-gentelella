@@ -8,6 +8,7 @@ import os
 import imp
 import pip
 import uuid
+import pandas as pd
 
 @blueprint.route('/<template>')
 @login_required
@@ -261,3 +262,27 @@ def update_flag():
     print(res) # 6 res就是我们当前这句更新语句所更新的行数
     db.session.commit()
     return jsonify('success')
+
+
+@blueprint.route('/get_flag_for_bar_y_category_stack', methods=['POST'])
+@login_required
+def get_flag_for_bar_y_category_stack():
+    
+    
+    flags = db.session.query(Flag).all()
+    flags_list = []
+
+    for flag in flags:
+        flags_list.append(flag.to_json())
+
+    flags_df = pd.DataFrame(flags_list)
+
+    send_df = pd.DataFrame(columns=["flags_send","flags_un_send","flags_send_error"],
+                            index=flags_df['ip'].drop_duplicates().values.tolist())
+    
+
+    db.session.commit()
+    return jsonify(ips = flags_df['ip'].drop_duplicates().values.tolist(),
+                   flags_send = [x[1] for x in res],
+                   flags_un_send = [x[1] for x in res],
+                   flags_send_error = [x[1] for x in res])

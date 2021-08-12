@@ -270,7 +270,110 @@ function init_tables_flag_DataTable() {
 
 }
 
+function init_flag_echarts() {
+    if ($('#flag_echart_bar_y_category_stack').length ){
+			  
+        var echartBar = echarts.init(document.getElementById('flag_echart_bar_y_category_stack'));
+
+        option ={
+          title: {
+            text: 'Graph title',
+            subtext: 'Graph Sub-text'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // Use axis to trigger tooltip
+                type: 'shadow'        // 'shadow' as default; can also be 'line' or 'shadow'
+            }
+        },
+        legend: {
+            data: ['已发送', '未发送', '发送失败']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value'
+        },
+        yAxis: {
+            type: 'category',
+            data: []
+        },
+        series: [
+            {
+                name: '已发送',
+                type: 'bar',
+                stack: 'total',
+                label: {
+                    show: true
+                },
+                emphasis: {
+                    focus: 'series'
+                },
+                data: []
+            },
+            {
+                name: '未发送',
+                type: 'bar',
+                stack: 'total',
+                label: {
+                    show: true
+                },
+                emphasis: {
+                    focus: 'series'
+                },
+                data: []
+            },
+            {
+                name: '发送失败',
+                type: 'bar',
+                stack: 'total',
+                label: {
+                    show: true
+                },
+                emphasis: {
+                    focus: 'series'
+                },
+                data: []
+            }
+        ]
+        };
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "/get_flag_for_bar_y_category_stack", //把表单数据发送到/viewdata
+            data: null, // 发送的数据
+            dataType : "json",  //返回数据形式为json
+            async: false,
+            error: function(request) {
+                console.log(request);
+                echartBar.setOption(option);
+                alert(request.responseJSON);
+            },
+            success: function(result) {
+                //console.log(result);
+                for (i = 0, max = result.ips.length; i < max; i++) { //注意：result.Goods_name.length
+                    option.yAxis[0].data.push(result.ips[i]);
+                    option.series[0].data.push(result.flags_send[i]);//已发送
+                    option.series[1].data.push(result.flags_un_send[i]);//未发送
+                    option.series[2].data.push(result.flags_send_error[i]);//发送失败
+                };
+                // 为echarts对象加载数据
+                myChart.setOption(option);
+            }
+        });
+
+        
+
+    }
+}
+
 
 $(document).ready(function() {
     init_tables_flag_DataTable();
+    init_flag_echarts();
 });	
