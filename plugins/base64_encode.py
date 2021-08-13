@@ -9,16 +9,15 @@ plugin_test_out="ZmxhZw=="#测试用例的输出
 plugin_info = "base64加密，需要import base64" #插件信息，可以写一些demo，必选
 
 #插件运行函数
-def run(arg,return_list):
+def run(arg,record_return_value_scheduler):
 
     result = base64.b64encode(arg.encode('utf-8'))
     result_dict = {
         "plugin_name":plugin_name,
         "plugin_version":plugin_version,
         "plugin_run_time":datetime.datetime.now(),
-        "plugin_run_arg":arg,
-        "plugin_run_result":result,
+        "plugin_run_result":{"arg":arg,"base64":result},
     }
-    return_list.append(result_dict)
-    print("--------",return_list)
+    record_return_value_scheduler(result_dict)
+    print("--------",result_dict)
     return result_dict

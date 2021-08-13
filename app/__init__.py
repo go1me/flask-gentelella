@@ -6,14 +6,21 @@ from flask_apscheduler import APScheduler
 from importlib import import_module
 from logging import basicConfig, DEBUG, getLogger, StreamHandler
 from os import path
+import queue
 
 db = SQLAlchemy()
 login_manager = LoginManager()
+scheduler_return_value_queue = queue.Queue()
 
 
 # 初始化调度器
 scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
-scheduler_return_list = []
+
+
+def record_return_value_scheduler(return_value):
+    scheduler_return_value_queue.put(return_value)
+def get_return_value_scheduler():
+    scheduler_return_value_queue.get()
 
 def register_extensions(app):
     db.init_app(app)

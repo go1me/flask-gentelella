@@ -1,7 +1,7 @@
 from app.ctf import blueprint
 from flask import render_template,jsonify,request
 from flask_login import login_required
-from app import db,scheduler,scheduler_return_list
+from app import db,scheduler,record_return_value_scheduler
 from app.ctf.models import Target,Script,Task,Flag
 import json
 import os
@@ -193,7 +193,7 @@ def run_task():
         plugins = imp.load_source("plugins",script_path)
         print(plugins.plugin_name,script_path)
         if task.times ==0:
-            scheduler.add_job(func=plugins.run, trigger='interval', id=task.script_name, seconds=task.cycle, args=[task.ip,scheduler_return_list]) 
+            scheduler.add_job(func=plugins.run, trigger='interval', id=task.script_name+task.plugin_version, seconds=task.cycle, args=[task.ip,record_return_value_scheduler]) 
         elif task.times >0:
             run_time=task.cycle*task.times
 
