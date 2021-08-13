@@ -273,9 +273,9 @@ function init_tables_flag_DataTable() {
 function init_flag_echarts() {
     if ($('#flag_echart_bar_y_category_stack').length ){
 			  
-        var echartBar = echarts.init(document.getElementById('flag_echart_bar_y_category_stack'));
+        var flag_echart_bar_y_category_stack = echarts.init(document.getElementById('flag_echart_bar_y_category_stack'));
 
-        option ={
+        flag_echart_bar_y_category_stack_option ={
           title: {
             text: 'Graph title',
             subtext: 'Graph Sub-text'
@@ -342,33 +342,40 @@ function init_flag_echarts() {
         ]
         };
 
-        $.ajax({
-            cache: false,
-            type: "POST",
-            url: "/ctf/get_flag_for_bar_y_category_stack", //把表单数据发送到/viewdata
-            data: null, // 发送的数据
-            dataType : "json",  //返回数据形式为json
-            async: false,
-            error: function(request) {
-                console.log(request);
-                echartBar.setOption(option);
-                alert(request.responseJSON);
-            },
-            success: function(result) {
-                console.log(result);
-                for (i = 0, max = result.ips.length; i < max; i++) { //注意：result.Goods_name.length
-                    option.yAxis.data.push(result.ips[i]);
-                    option.series[0].data.push(result.flags_send[i]);//已发送
-                    option.series[1].data.push(result.flags_un_send[i]);//未发送
-                    option.series[2].data.push(result.flags_send_error[i]);//发送失败
-                };
-                // 为echarts对象加载数据
-                echartBar.setOption(option);
-            }
-        });
+        var flag_echart_bar_y_category_stack_refresh = function() {
 
-        
-
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/ctf/get_flag_for_bar_y_category_stack", //把表单数据发送到/viewdata
+                data: null, // 发送的数据
+                dataType : "json",  //返回数据形式为json
+                async: false,
+                error: function(request) {
+                    console.log(request);
+                    flag_echart_bar_y_category_stack.setOption(flag_echart_bar_y_category_stack_option);
+                    //alert(request.responseJSON);
+                },
+                success: function(result) {
+                    console.log(result);
+                    flag_echart_bar_y_category_stack_option.yAxis.data = result.ips;
+                    flag_echart_bar_y_category_stack_option.series[0].data=result.flags_send;//已发送
+                    flag_echart_bar_y_category_stack_option.series[1].data=result.flags_un_send;//未发送
+                    flag_echart_bar_y_category_stack_option.series[2].data=result.flags_send_error;//发送失败
+                    /*
+                    for (i = 0, max = result.ips.length; i < max; i++) { //注意：result.Goods_name.length
+                        flag_echart_bar_y_category_stack_option.yAxis.data.push(result.ips[i]);
+                        flag_echart_bar_y_category_stack_option.series[0].data.push(result.flags_send[i]);//已发送
+                        flag_echart_bar_y_category_stack_option.series[1].data.push(result.flags_un_send[i]);//未发送
+                        flag_echart_bar_y_category_stack_option.series[2].data.push(result.flags_send_error[i]);//发送失败
+                    };*/
+                    // 为echarts对象加载数据
+                    flag_echart_bar_y_category_stack.setOption(flag_echart_bar_y_category_stack_option);
+                }
+            });
+        }
+        //定时五秒钟刷新
+        setInterval(flag_echart_bar_y_category_stack_refresh, 5000);
     }
 }
 

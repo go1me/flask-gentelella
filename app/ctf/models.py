@@ -134,11 +134,11 @@ class Flag(db.Model):
     #初始化数据
 @event.listens_for(Flag.__table__, 'after_create')
 def create_Flag(target, connection, **kw):
-
+    iplist=["1","2","3","4"]
     flag_status_list =["未发送","已发送","发送失败"]
     dict_list =[]
-    for i in range(3):
-        for j in range(20):
-            flag_status =flag_status_list[random.randint(0,len(flag_status_list)-1)]
-            dict_list.append({'ip': "192.168.1."+str(i),"flag":str(uuid4()),"flag_status":flag_status})
+    for i in range(65):
+        flag_status =flag_status_list[random.randint(0,len(flag_status_list)-1)]
+        ip =iplist[random.randint(0,len(iplist)-1)]
+        dict_list.append({'ip': "192.168.1."+ip,"flag":str(uuid4()),"flag_status":flag_status})
     connection.execute(target.insert(), *dict_list)
