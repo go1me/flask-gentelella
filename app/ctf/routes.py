@@ -1,7 +1,7 @@
 from app.ctf import blueprint
 from flask import render_template,jsonify,request
 from flask_login import login_required
-from app import db,scheduler,record_return_value_scheduler
+from app import db,scheduler,record_return_value_scheduler, get_return_value_scheduler
 from app.ctf.models import Target,Script,Task,Flag
 import json
 import os
@@ -15,6 +15,28 @@ def route_template(template):
     return render_template(template + '.html')
 
 
+#定时更新flag的任务
+@scheduler.task('interval', id='get_flag_by_timing', seconds=5)#, misfire_grace_time=900)
+def get_flag_by_timing():
+    flag_list = get_return_value_scheduler()
+    print("get_flag_by_timing------------------",len(flag_list))
+    dict_list=[]
+    with scheduler.app.app_context():
+        for flag_item in flag_list:
+            if "plugin_run_result" in flag_item.keys():
+                plugin_run_result = flag_item["plugin_run_result"]
+                if "flag" in plugin_run_result.keys():
+                    flag = plugin_run_result["flag"]
+                    if "arg" in plugin_run_result.keys():
+                        arg = plugin_run_result["arg"]
+                        dict_list.append({'ip': arg,"flag":flag})
+                        db.session.add( Flag(flag=flag,ip=arg))
+                        #更新target的flag总数
+                        target = db.session.query(Target).filter(Target.ip == arg).first()
+                        target.flag_number+=1
+        if len(dict_list)>0:
+            db.session.commit()
+ 
 @blueprint.route('/get_targets', methods=['GET'])
 @login_required
 def get_targets():
@@ -29,6 +51,8 @@ def add_target():
     data = json.loads(request.get_data())
     ip = data["ip"]
     group = data["group"]
+    if group =="":
+        group="default"
     count = db.session.query(Target).filter(Target.ip == ip).count()
     if count>0:
         return jsonify(ip+"已经存在，新建失败"),400
@@ -193,7 +217,7 @@ def run_task():
         plugins = imp.load_source("plugins",script_path)
         print(plugins.plugin_name,script_path)
         if task.times ==0:
-            scheduler.add_job(func=plugins.run, trigger='interval', id=task.script_name+task.plugin_version, seconds=task.cycle, args=[task.ip,record_return_value_scheduler]) 
+            scheduler.add_job(func=plugins.run, trigger='interval', id=(str(task.id)), seconds=task.cycle, args=[task.ip,record_return_value_scheduler]) 
         elif task.times >0:
             run_time=task.cycle*task.times
 
@@ -260,20 +284,15 @@ def update_flag():
     res = db.session.query(Flag).filter(Flag.flag == flag).update({"flag":flag,"flag_status":flag_status})
     print(res) # 6 res就是我们当前这句更新语句所更新的行数
     db.session.commit()
-    return jsonify('success')
-
-
+    return jsonify('success')                   
 @blueprint.route('/get_flag_for_bar_y_category_stack', methods=['POST'])
 @login_required
 def get_flag_for_bar_y_category_stack():
-    
-    
-    flags = db.session.query(Flag).all()
     ips=[]
     flags_send=[]
     flags_un_send=[]
     flags_send_error=[]
-
+    flags = db.session.query(Flag).all()
     for flag in flags:
         ip = flag.ip
         flag_status = flag.flag_status
@@ -294,6 +313,14 @@ def get_flag_for_bar_y_category_stack():
             flags_send_error[the_index]+=1
         else:
             dddd
+
+    targets = db.session.query(Target).all()
+    for target in targets:
+        if target.ip not in ips:
+            ips.append(target.ip)
+            flags_send.append(0)
+            flags_un_send.append(0)
+            flags_send_error.append(0)
 
     return jsonify(ips = ips,
                    flags_send = flags_send,

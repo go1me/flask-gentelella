@@ -1,7 +1,7 @@
 import datetime
 from uuid import uuid4
 import random
-from sqlalchemy import DateTime, Column, Integer, String, event,Boolean
+from sqlalchemy import DateTime, Column, Integer, String, event
 from app import db
 import os,shutil
 import uuid
@@ -134,6 +134,8 @@ class Flag(db.Model):
     #初始化数据
 @event.listens_for(Flag.__table__, 'after_create')
 def create_Flag(target, connection, **kw):
+    pass
+    '''
     iplist=["1","2","3","4"]
     flag_status_list =["未发送","已发送","发送失败"]
     dict_list =[]
@@ -142,3 +144,4 @@ def create_Flag(target, connection, **kw):
         ip =iplist[random.randint(0,len(iplist)-1)]
         dict_list.append({'ip': "192.168.1."+ip,"flag":str(uuid4()),"flag_status":flag_status})
     connection.execute(target.insert(), *dict_list)
+    '''

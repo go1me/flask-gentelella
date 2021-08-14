@@ -20,7 +20,10 @@ scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 def record_return_value_scheduler(return_value):
     scheduler_return_value_queue.put(return_value)
 def get_return_value_scheduler():
-    scheduler_return_value_queue.get()
+    scheduler_return_value_queue_list = []
+    while not scheduler_return_value_queue.empty():
+        scheduler_return_value_queue_list.append(scheduler_return_value_queue.get())
+    return scheduler_return_value_queue_list
 
 def register_extensions(app):
     db.init_app(app)

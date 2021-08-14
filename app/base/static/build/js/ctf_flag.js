@@ -344,6 +344,8 @@ function init_flag_echarts() {
 
         var flag_echart_bar_y_category_stack_refresh = function() {
 
+            $('#datatable-flag').DataTable().ajax.reload(null,false);
+
             $.ajax({
                 cache: false,
                 type: "POST",
@@ -374,8 +376,10 @@ function init_flag_echarts() {
                 }
             });
         }
-        //定时五秒钟刷新
-        setInterval(flag_echart_bar_y_category_stack_refresh, 5000);
+
+        flag_echart_bar_y_category_stack_refresh();
+        //定时x秒钟刷新
+        setInterval(flag_echart_bar_y_category_stack_refresh, 20000);
     }
 }
 
