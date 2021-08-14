@@ -8,6 +8,7 @@ import os
 import imp
 import pip
 import uuid
+import datetime
 
 @blueprint.route('/<template>')
 @login_required
@@ -36,6 +37,25 @@ def get_flag_by_timing():
                         target.flag_number+=1
         if len(dict_list)>0:
             db.session.commit()
+
+        #清理关闭定时任务
+        tasks = db.session.query(Task).filter(Task.task_run_status == "run").all()
+        if len(tasks)>0:
+            job_id_list = []
+            jobs = scheduler.get_jobs()
+            for jjob in jobs:
+                if jjob.id != 'get_flag_by_timing':
+                    job_id_list.append(int(jjob.id))
+            need_to_commit = False
+
+            for task in tasks:
+                if task.id not in job_id_list:
+                    task.task_run_status="stop"
+                    need_to_commit=True
+            if need_to_commit == True:
+                db.session.commit()
+
+    
  
 @blueprint.route('/get_targets', methods=['GET'])
 @login_required
@@ -220,10 +240,14 @@ def run_task():
             scheduler.add_job(func=plugins.run, trigger='interval', id=(str(task.id)), seconds=task.cycle, args=[task.ip,record_return_value_scheduler]) 
         elif task.times >0:
             run_time=task.cycle*task.times
+            scheduler.add_job(func=plugins.run, trigger='interval', id=(str(task.id)), seconds=task.cycle, args=[task.ip,record_return_value_scheduler],
+                                start_date=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") , 
+                                end_date=(datetime.datetime.now()+datetime.timedelta(seconds=run_time)).strftime("%Y-%m-%d %H:%M:%S")) 
 
             pass
     else:
         task.task_run_status = "stop"
+        scheduler.remove_job(str(task.id))
 
     
     db.session.commit()
@@ -260,6 +284,12 @@ def add_flag():
 def delete_flag():
     data = json.loads(request.get_data())
     id = data["id"]
+    flag = db.session.query(Flag).filter(Flag.id == id).first()
+    #更新target的flag总数
+    target = db.session.query(Target).filter(Target.ip == flag.ip).first()
+    if target.flag_number>0:
+        target.flag_number-=1
+
     db.session.query(Flag).filter(Flag.id == id).delete()
     db.session.commit()
     return jsonify('success')

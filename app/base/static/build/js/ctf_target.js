@@ -581,6 +581,15 @@ function init_tables_target_DataTable() {
         }); 
     });
 
+    var refresh_datatables = function() {
+        $('#datatable-target').DataTable().ajax.reload(null,false);
+        $('#datatable-script').DataTable().ajax.reload(null,false); 
+        $('#datatable-task').DataTable().ajax.reload(null,false);  
+    }
+
+    //定时x秒钟刷新
+    setInterval(refresh_datatables, 20000);
+
 }
 
 
