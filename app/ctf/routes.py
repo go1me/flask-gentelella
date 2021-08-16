@@ -19,23 +19,26 @@ def route_template(template):
 #定时更新flag的任务
 @scheduler.task('interval', id='get_flag_by_timing', seconds=5)#, misfire_grace_time=900)
 def get_flag_by_timing():
-    flag_list = get_return_value_scheduler()
-    print("get_flag_by_timing------------------",len(flag_list))
-    dict_list=[]
+    return_list = get_return_value_scheduler()
+    print("get_flag_by_timing------------------",len(return_list))
+    need_to_commit = False
     with scheduler.app.app_context():
-        for flag_item in flag_list:
-            if "plugin_run_result" in flag_item.keys():
-                plugin_run_result = flag_item["plugin_run_result"]
-                if "flag" in plugin_run_result.keys():
-                    flag = plugin_run_result["flag"]
-                    if "arg" in plugin_run_result.keys():
-                        arg = plugin_run_result["arg"]
-                        dict_list.append({'ip': arg,"flag":flag})
-                        db.session.add( Flag(flag=flag,ip=arg))
-                        #更新target的flag总数
-                        target = db.session.query(Target).filter(Target.ip == arg).first()
-                        target.flag_number+=1
-        if len(dict_list)>0:
+        for return_item in return_list:
+            if "operation" in return_item.keys():
+                if return_item["operation"] == "get_flag":
+                    if "flag" in return_item.keys():
+                        flag = return_item["flag"]
+                        if "arg" in return_item.keys():
+                            arg = return_item["arg"]
+                            flag_status= "未发送"
+                            if "result" in return_item.keys():
+                                flag_status =  return_item["result"]
+                            db.session.add( Flag(flag=flag,ip=arg,flag_status=flag_status))
+                            #更新target的flag总数
+                            target = db.session.query(Target).filter(Target.ip == arg).first()
+                            target.flag_number+=1
+                            need_to_commit = True
+        if need_to_commit == True:
             db.session.commit()
 
         #清理关闭定时任务
